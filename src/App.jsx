@@ -44,7 +44,7 @@ const App = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="text-center p-8 bg-white rounded shadow-lg">
         <h1 className="text-4xl font-extrabold text-blue-500">Hello Vite + Tailwind!</h1>
-        <p className="mt-4 text-gray-600">
+        <p className="mt-4 text-grey-600">
           Build modern UIs with speed and simplicity using Vite and Tailwind CSS.
         </p>
         <button className="mt-6 px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600">
