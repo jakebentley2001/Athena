@@ -25,56 +25,13 @@
 
 // export default App;
 
-// import React, { useState } from 'react';
-// import PdfViewer from './components/PdfViewer';
-
-// const App = () => {
-//   const pdfUrl = '/Athena.pdf';
-//   const [pdfWidth, setPdfWidth] = useState(50); // initially splits down the middle
-
-//   const handleDrag = (e) => {
-//     const newPdfWidth = (e.clientX / window.innerWidth) * 100;
-//     if (newPdfWidth > 20 && newPdfWidth < 80) {
-//       setPdfWidth(newPdfWidth);
-//     }
-//   };
-
-//   return (
-//     <div className = "flex h-screen">
-//       {/* PDF Viewer Section */}
-//       <div style={{width: `${pdfWidth}%`}} className="bg-gray-100">
-//         <PdfViewer pdfUrl={pdfUrl} />
-//       </div>
-
-//       {/* Resizable Divider */}
-//       <div className = "w-1 bg-gray-400 cursor-col-resize"
-//         onMouseDown={(e) => {
-//           document.addEventListener('mousemove', handleDrag);
-//           document.addEventListener('mousup', () => {document.removeEventListener('mousemove',handleDrag)});
-//         }}
-//       ></div>
-
-//       {/* Notes Section */}
-//       <div style = {{ width: `${100 - pdfWidth}%`}} className = "bg-white p-4">
-//         <h2 className = "text-xl font-bold mb-4">Notes</h2>
-//         <textarea
-//           className = "w-full h-full border border-gray300 rounded p-2"
-//           placeholder="Write your notes here.. "
-//         ></textarea>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default App;
-
 
 import React, { useState } from 'react';
 import PdfViewer from './components/PdfViewer';
 
 const App = () => {
   const [pdfWidth, setPdfWidth] = useState(50); // Initial width as a percentage of screen width
-  const pdfUrl = '/Athena.pdf';
+  const pdfUrl = '/dummy.pdf';
 
   const handleDrag = (e) => {
     const newPdfWidth = (e.clientX / window.innerWidth) * 100;
@@ -83,7 +40,7 @@ const App = () => {
     console.log(`Window Width: ${window.innerWidth}px`);
     console.log(`PDF Width: ${newPdfWidth}%`);
     console.log(`Notes Width: ${100 - newPdfWidth}%`);
-    
+
     if (newPdfWidth > 20 && newPdfWidth < 80) {
       setPdfWidth(newPdfWidth);
     }
