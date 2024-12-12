@@ -5,48 +5,34 @@ import { highlightPlugin, MessageIcon, Trigger } from '@react-pdf-viewer/highlig
 import '@react-pdf-viewer/highlight/lib/styles/index.css';
 import { Button, Position, Tooltip } from '@react-pdf-viewer/core';
 
-const PdfViewer = ({ pdfUrl, pdfWidth }) => {
+
+const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled }) => {
     const [highlights, setHighlights] = useState([]);
 
-    const renderHighlightTarget = (props) => (
-        <div
-            style={{
-                background: '#eee',
-                display: 'flex',
-                position: 'absolute',
-                left: `${props.selectionRegion.left}%`,
-                top: `${props.selectionRegion.top + props.selectionRegion.height}%`,
-                transform: 'translate(0, 8px)',
-                zIndex: 1000, // Add this line
-            }}
-        >
-            <Tooltip
-                position={Position.TopCenter}
-                target={
-                    <Button 
-                    onClick={() => {
-                        console.log('Selected Text:', props.selectedText);  // Log selected text
-                        const newHighlight = {
-                            content: { text: props.selectedText },
-                            position: props.selectionRegion
-                        };
-                        setHighlights([...highlights, newHighlight]);
-                        props.toggle();
-                    }}
-                >
-                    <MessageIcon />
-                </Button>
-                }
-                content={() => <div style={{ width: '100px' }}>Add highlight</div>}
-                offset={{ left: 0, top: -8 }}
-            />
-        </div>
-    );
+    const renderHighlightTarget = (props) => {
+        // Automatically trigger highlight when text is selected
+        setTimeout(() => {
+            console.log('Selected Text:', props.selectedText);
+            const newHighlight = {
+                content: { text: props.selectedText },
+                position: props.selectionRegion
+            };
+            setHighlights([...highlights, newHighlight]);
+            props.toggle();
+        }, 0);
     
+        // Return null since we don't need to render the button
+        return null;
+    };
 
+    let triggerState =  highlightEnabled ? "TextSelection" : "None";
+    console.log(triggerState);
+    
     const highlightPluginInstance = highlightPlugin({
-        renderHighlightTarget
+        renderHighlightTarget,
+        trigger: triggerState
     });
+
 
     return (
         <div
@@ -56,19 +42,11 @@ const PdfViewer = ({ pdfUrl, pdfWidth }) => {
             <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                 <Viewer 
                     fileUrl={pdfUrl} 
-                    plugins={[highlightPluginInstance]}
+                    plugins={[highlightPluginInstance]} 
                 />
             </Worker>
-            
-            {/* Optional: Display highlights list */}
-            <div style={{ marginTop: '1rem' }}>
-                <h3>Highlights:</h3>
-                {highlights.map((highlight, index) => (
-                    <div key={index} style={{ margin: '8px 0' }}>
-                        {highlight.content.text}
-                    </div>
-                ))}
-            </div>
+
+
         </div>
     );
 };
