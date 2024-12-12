@@ -1,29 +1,29 @@
-// import React from "react";
-// import TrialButton from './components/trialButton';
-// import PDFViewer from "./components/PdfViewer";
+// // import React from "react";
+// // import TrialButton from './components/trialButton';
+// // import PDFViewer from "./components/PdfViewer";
 
-// const App = () => {
+// // const App = () => {
 
-//   const handleClick = () => {
-//     alert('Button clicked');
-//   };
+// //   const handleClick = () => {
+// //     alert('Button clicked');
+// //   };
 
-//   return (
-//     <div className="flex items-center justify-center min-h-screen bg-gray-50">
-//       <div className="text-center p-8 bg-white rounded shadow-lg">
-//         <h1 className="text-4xl font-extrabold text-blue-500">Hello Vite + Tailwind!</h1>
-//         <p className="mt-4 text-blue-500">
-//           Build modern UIs with speed and simplicity using Vite and Tailwind CSS.
-//         </p>
-//         <TrialButton label = "Trial" onClick = {handleClick} />
-//         <TrialButton label="Submit" onClick={() => console.log('Submit button clicked')} />
-//         <PDFViewer pdfUrl={"public/Athena.pdf"} />
-//       </div>
-//     </div>
-//   );
-// };
+// //   return (
+// //     <div className="flex items-center justify-center min-h-screen bg-gray-50">
+// //       <div className="text-center p-8 bg-white rounded shadow-lg">
+// //         <h1 className="text-4xl font-extrabold text-blue-500">Hello Vite + Tailwind!</h1>
+// //         <p className="mt-4 text-blue-500">
+// //           Build modern UIs with speed and simplicity using Vite and Tailwind CSS.
+// //         </p>
+// //         <TrialButton label = "Trial" onClick = {handleClick} />
+// //         <TrialButton label="Submit" onClick={() => console.log('Submit button clicked')} />
+// //         <PDFViewer pdfUrl={"public/Athena.pdf"} />
+// //       </div>
+// //     </div>
+// //   );
+// // };
 
-// export default App;
+// // export default App;
 
 
 import React, { useState } from 'react';
@@ -31,7 +31,7 @@ import PdfViewer from './components/PdfViewer';
 
 const App = () => {
   const [pdfWidth, setPdfWidth] = useState(50); // Initial width as a percentage of screen width
-  const pdfUrl = '/dummy.pdf';
+  const pdfUrl = '/Athena.pdf';
 
   const handleDrag = (e) => {
     const newPdfWidth = (e.clientX / window.innerWidth) * 100;
@@ -52,6 +52,7 @@ const App = () => {
       {/*//<div style={{ width: `${pdfWidth}%` }} className="bg-gray-100"> */}
       <div className="bg-gray-100">
         <PdfViewer pdfUrl={pdfUrl} pdfWidth={`${(window.innerWidth * pdfWidth) / 100}`} />
+
       </div>
 
       {/* Resizable Divider */}
