@@ -1,67 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Viewer, Worker } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
-import { highlightPlugin, MessageIcon, Trigger } from '@react-pdf-viewer/highlight';
+//import { highlightPlugin, MessageIcon, Trigger } from '@react-pdf-viewer/highlight';
 import '@react-pdf-viewer/highlight/lib/styles/index.css';
 import { Button, Position, Tooltip } from '@react-pdf-viewer/core';
+import {
+    highlightPlugin,
+    HighlightArea,
+    MessageIcon,
+    RenderHighlightContentProps,
+    RenderHighlightsProps,
+    RenderHighlightTargetProps,
+} from '@react-pdf-viewer/highlight';
 
-
-const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled }) => {
+const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor }) => {
     const [highlights, setHighlights] = useState([]);
-
+    const idCounter = useRef(0);
 
     const renderHighlightTarget = (props) => {
-        // Automatically trigger highlight when text is selected
         if (highlightEnabled) {
             setTimeout(() => {
-                console.log('Selected Text:', props.selectionRegion);
+                console.log('Selected Text:', props.selectedText);
+                console.log('Highlight Areas:', props.highlightAreas);
+
+                // Increment the counter and use it as the unique ID
+                idCounter.current += 1;
                 const newHighlight = {
-                    id: new Date().getTime(),
+                    id: idCounter.current, // Use the incremented counter as the ID
                     content: { text: props.selectedText },
-                    position: {
-                        pageIndex: props.selectionRegion.pageIndex,
-                        height: props.selectionRegion.height,
-                        width: props.selectionRegion.width,
-                        left: props.selectionRegion.left,
-                        top: props.selectionRegion.top,
-                    }
+                    color: highlightColor, // Store the selected color
+                    highlightAreas: props.highlightAreas, // Store all highlight areas
                 };
-                setHighlights([...highlights, newHighlight]);
-                props.toggle();
-            }, 0)
-        };
-    
-        // Return null since we don't need to render the button
+
+                setHighlights((prevHighlights) => [...prevHighlights, newHighlight]);
+                props.toggle(); // Close the selection UI
+            }, 0);
+        }
+
         return null;
     };
 
     const renderHighlights = (props) => (
         <div>
-            {highlights
-                .filter((highlight) => highlight.position.pageIndex === props.pageIndex) // Filter highlights for the current page
-                .map((highlight, idx) => (
-                    <div
-                        key={highlight.id || idx} // Use the highlight ID if available
-                        className="highlight-area"
-                        style={Object.assign(
-                            {},
-                            {
-                                background: 'yellow',
-                                opacity: 0.4,
-                            },
-                            props.getCssProperties(highlight.position, props.rotation) // Apply CSS for the highlight
-                        )}
-                    />
-                ))}
+            {highlights.map((highlight) => (
+                <React.Fragment key={highlight.id}>
+                    {highlight.highlightAreas
+                        .filter((area) => area.pageIndex === props.pageIndex) // Filter areas for the current page
+                        .map((area, idx) => (
+                            <div
+                                key={`${highlight.id}-${idx}`} // Ensure unique key for each area
+                                className="highlight-area"
+                                style={Object.assign(
+                                    {},
+                                    {
+                                        background: highlight.color, // Use the stored color
+                                        opacity: 0.2,
+                                    },
+                                    props.getCssProperties(area, props.rotation) // Apply CSS for the highlight area
+                                )}
+                            />
+                        ))}
+                </React.Fragment>
+            ))}
         </div>
     );
 
     const highlightPluginInstance = highlightPlugin({
         renderHighlightTarget,
-        renderHighlights, 
-        trigger: "TextSelection",
+        renderHighlights,
+        trigger: 'TextSelection',
     });
-
 
     return (
         <div
@@ -69,13 +77,8 @@ const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled }) => {
             style={{ width: `${pdfWidth}px`, height: '100vh' }}
         >
             <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                <Viewer 
-                    fileUrl={pdfUrl} 
-                    plugins={[highlightPluginInstance]} 
-                />
+                <Viewer fileUrl={pdfUrl} plugins={[highlightPluginInstance]} />
             </Worker>
-
-
         </div>
     );
 };
