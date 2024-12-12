@@ -11,26 +11,27 @@ const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled }) => {
 
     const renderHighlightTarget = (props) => {
         // Automatically trigger highlight when text is selected
-        setTimeout(() => {
-            console.log('Selected Text:', props.selectedText);
-            const newHighlight = {
-                content: { text: props.selectedText },
-                position: props.selectionRegion
-            };
-            setHighlights([...highlights, newHighlight]);
-            props.toggle();
-        }, 0);
+        if (highlightEnabled) {
+            setTimeout(() => {
+                console.log('Selected Text:', props.selectedText);
+                const newHighlight = {
+                    id: new Date().getTime(),
+                    content: { text: props.selectedText },
+                    position: props.selectionRegion
+                };
+                setHighlights([...highlights, newHighlight]);
+                props.toggle();
+            }, 0)
+        };
     
         // Return null since we don't need to render the button
         return null;
     };
 
-    let triggerState =  highlightEnabled ? "TextSelection" : "None";
-    console.log(triggerState);
     
     const highlightPluginInstance = highlightPlugin({
         renderHighlightTarget,
-        trigger: triggerState
+        trigger: "TextSelection"
     });
 
 

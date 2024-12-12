@@ -66,7 +66,6 @@ const App = () => {
               {/* PDF Viewer Section */}
               <div className="bg-gray-100">
                   <PdfViewer
-                      key={highlightEnabled}
                       pdfUrl={pdfUrl}
                       pdfWidth={`${(window.innerWidth * pdfWidth) / 100}`}
                       highlightEnabled={highlightEnabled}
