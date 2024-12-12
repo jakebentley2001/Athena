@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Viewer, Worker } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -8,22 +7,6 @@ import { Button, Position, Tooltip } from '@react-pdf-viewer/core';
 
 const PdfViewer = ({ pdfUrl, pdfWidth }) => {
     const [highlights, setHighlights] = useState([]);
-
-
-    const renderHighlightContent = (props) => (
-        <div
-            style={{
-                background: '#fff',
-                border: '1px solid rgba(0, 0, 0, 0.3)',
-                borderRadius: '2px',
-                padding: '8px',
-                maxWidth: '400px',
-                wordBreak: 'break-word',
-            }}
-        >
-            <div>{props.selectedText}</div>
-        </div>
-    );
 
     const renderHighlightTarget = (props) => (
         <div
@@ -42,7 +25,6 @@ const PdfViewer = ({ pdfUrl, pdfWidth }) => {
                 target={
                     <Button 
                     onClick={() => {
-                        console.log('hello');  // Added console.log
                         console.log('Selected Text:', props.selectedText);  // Log selected text
                         const newHighlight = {
                             content: { text: props.selectedText },
@@ -63,21 +45,7 @@ const PdfViewer = ({ pdfUrl, pdfWidth }) => {
     
 
     const highlightPluginInstance = highlightPlugin({
-        renderHighlightTarget,
-        renderHighlights: (props) => (
-            <div>
-                {highlights.map((highlight, index) => (
-                    <div
-                        key={index}
-                        style={Object.assign({
-                            background: 'yellow',
-                            opacity: 0.4,
-                        }, props.getCssProperties(highlight.position, props.rotation))}
-                    />
-                ))}
-            </div>
-        ),
-        trigger: Trigger.TextSelection
+        renderHighlightTarget
     });
 
     return (
