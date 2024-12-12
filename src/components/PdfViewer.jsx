@@ -12,10 +12,22 @@ import {
     RenderHighlightsProps,
     RenderHighlightTargetProps,
 } from '@react-pdf-viewer/highlight';
+import axios from 'axios';
 
 const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor }) => {
     const [highlights, setHighlights] = useState([]);
     const idCounter = useRef(0);
+
+   
+
+    const saveHighlight = async (highlight) => {
+        try {
+            const response = await axios.post('http://127.0.0.1:5000/save', highlight);
+            console.log('Highlight saved:', response.data);
+        } catch (error) {
+            console.error('Error saving highlight:', error);
+        }
+    };
 
     const renderHighlightTarget = (props) => {
         if (highlightEnabled) {
@@ -33,6 +45,12 @@ const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor }) => {
                 };
 
                 setHighlights((prevHighlights) => [...prevHighlights, newHighlight]);
+
+                saveHighlight({
+                    note: props.selectedText,
+                    highlights: props.highlightAreas,
+                });
+                
                 props.toggle(); // Close the selection UI
             }, 0);
         }
