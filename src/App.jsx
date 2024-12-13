@@ -128,16 +128,17 @@ const App = () => {
     const handleSaveHighlight = (highlight) => {
         setNotes((prevNotes) => [
             ...prevNotes,
-            { id: prevNotes.length + 1, text: `Note for highlight: ${highlight.note}` },
+            { id: prevNotes.length + 1, text: `Note for highlight: ${highlight}` },
         ]);
+    
     };
 
     const handleAddNote = () => {
-        setNotes((prevNotes) => [
-            ...prevNotes,
-            { id: prevNotes.length + 1, text: 'New Note' },
-        ]);
-    };
+      setNotes((prevNotes) => [
+          ...prevNotes,
+          { id: prevNotes.length + 1, text: "New Note" },
+      ]);
+  };
 
     const handleNoteChange = (id, newText) => {
         setNotes((prevNotes) =>
@@ -194,7 +195,7 @@ const App = () => {
                         pdfWidth={`${(window.innerWidth * pdfWidth) / 100}`}
                         highlightEnabled={highlightEnabled}
                         highlightColor={currentColor}
-                        onSaveHighlight={handleSaveHighlight}
+                        onSaveHighlight={handleSaveHighlight}  
                     />
                 </div>
 

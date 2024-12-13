@@ -8,18 +8,36 @@ import { highlightPlugin, HighlightArea, MessageIcon, RenderHighlightContentProp
     RenderHighlightsProps, RenderHighlightTargetProps,} from '@react-pdf-viewer/highlight';
 import axios from 'axios';
 
-const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor, onSaveHighlight }) => {
+const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor, onSaveHighlight, onAddNote }) => {
     const [highlights, setHighlights] = useState([]);
     const idCounter = useRef(0);
     const processingHighlight = useRef(false); 
 
    
 
+    // const saveHighlight = async (highlight) => {
+    //     try {
+    //         const response = await axios.post('http://127.0.0.1:5000/save', highlight);
+    //         console.log('Highlight saved:', response.data.data);
+    //         onSaveHighlight(response.data.data);
+    //     } catch (error) {
+    //         console.error('Error saving highlight:', error);
+    //     }
+    // };
+
     const saveHighlight = async (highlight) => {
         try {
             const response = await axios.post('http://127.0.0.1:5000/save', highlight);
-            console.log('Highlight saved:', response.data.data);
-            onSaveHighlight(response.data.data);
+            const backendResponse = response.data.data;
+
+            console.log('Highlight saved:', backendResponse);
+            onSaveHighlight(backendResponse);
+
+            // Add a new note with the backend response
+            onAddNote({
+                id: idCounter.current,
+                text: backendResponse, // Add the backend response as the note text
+            });
         } catch (error) {
             console.error('Error saving highlight:', error);
         }
