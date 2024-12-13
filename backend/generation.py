@@ -35,6 +35,7 @@ def generate_response(question, paper_chunks, chunk_embeddings):
 
     context = get_most_relevant_chunk(question, paper_chunks, chunk_embeddings)
 
+
     prompt = f"""
         Context: {context}
 
@@ -44,7 +45,7 @@ def generate_response(question, paper_chunks, chunk_embeddings):
         """
 
     response = client.chat.completions.create(
-    model="gpt-4",
+    model="gpt-3.5-turbo",
     messages=[{"role": "user", "content": prompt}]
     )
 

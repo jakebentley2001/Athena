@@ -15,6 +15,7 @@ global chunks
 global chunk_embeddings
 chunks, chunk_embeddings = generate_chunks('../public/Athena.pdf')
 
+
 @app.route('/save', methods=['POST'])
 def save_note():
     data = request.json  # Get JSON data from the request

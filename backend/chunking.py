@@ -57,5 +57,5 @@ def generate_chunks(path):
         for chunk in paper_chunks
     ]
 
-
+    
     return paper_chunks, chunk_embeddings
