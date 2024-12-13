@@ -226,9 +226,7 @@ const App = () => {
                                 <textarea
                                     className="w-full border border-gray-300 rounded p-2"
                                     value={note.text}
-                                    onChange={(e) =>
-                                        handleNoteChange(note.id, e.target.value)
-                                    }
+                                    onChange={(e) => handleNoteChange(note.id, e.target.value)}
                                 ></textarea>
                             </div>
                         ))}
