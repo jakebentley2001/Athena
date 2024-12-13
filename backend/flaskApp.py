@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from openAI import generate_response
+
 
 app = Flask(__name__)
 
@@ -17,8 +19,8 @@ def save_note():
     
     # Append the note and highlights to the in-memory list
     notes_and_highlights.append(data)
-    print(data['note'])
-    return jsonify({'message': 'Note saved successfully', 'data': data}), 200
+    openai_response = generate_response(data['note'])
+    return jsonify({'message': 'Note saved successfully', 'data': openai_response}), 200
 
 @app.route('/notes', methods=['GET'])
 def get_notes():

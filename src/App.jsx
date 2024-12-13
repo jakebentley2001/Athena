@@ -5,6 +5,7 @@ const App = () => {
   const [pdfWidth, setPdfWidth] = useState(50); // Initial width as a percentage of screen width
   const [highlightEnabled, setHighlightEnabled] = useState(false); // Highlight toggle state
   const [currentColor, setCurrentColor] = useState('yellow'); // Current highlight color
+  const [notes, setNotes] = useState([]);
   const pdfUrl = '/Athena.pdf';
 
   const handleDrag = (e) => {
@@ -18,6 +19,10 @@ const App = () => {
       if (newPdfWidth > 20 && newPdfWidth < 80) {
           setPdfWidth(newPdfWidth);
       }
+  };
+
+  const handleSaveHighlight = (highlight) => {
+    setNotes((prevNotes) => [...prevNotes, highlight]);
   };
 
   return (
@@ -67,6 +72,7 @@ const App = () => {
                       pdfWidth={`${(window.innerWidth * pdfWidth) / 100}`}
                       highlightEnabled={highlightEnabled}
                       highlightColor={currentColor} // Pass the selected color
+                      onSaveHighlight={handleSaveHighlight}
                   />
               </div>
 
@@ -90,6 +96,8 @@ const App = () => {
                   <textarea
                       className="w-full h-full border border-gray-300 rounded p-2"
                       placeholder="Write your notes here..."
+                      readOnly
+                      value={notes.map((note, index) => `Note ${index + 1}: ${JSON.stringify(note)}\n`).join('\n')}
                   ></textarea>
               </div>
           </div>

@@ -4,33 +4,31 @@ import '@react-pdf-viewer/core/lib/styles/index.css';
 //import { highlightPlugin, MessageIcon, Trigger } from '@react-pdf-viewer/highlight';
 import '@react-pdf-viewer/highlight/lib/styles/index.css';
 import { Button, Position, Tooltip } from '@react-pdf-viewer/core';
-import {
-    highlightPlugin,
-    HighlightArea,
-    MessageIcon,
-    RenderHighlightContentProps,
-    RenderHighlightsProps,
-    RenderHighlightTargetProps,
-} from '@react-pdf-viewer/highlight';
+import { highlightPlugin, HighlightArea, MessageIcon, RenderHighlightContentProps,
+    RenderHighlightsProps, RenderHighlightTargetProps,} from '@react-pdf-viewer/highlight';
 import axios from 'axios';
 
-const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor }) => {
+const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor, onSaveHighlight }) => {
     const [highlights, setHighlights] = useState([]);
     const idCounter = useRef(0);
+    const processingHighlight = useRef(false); 
 
    
 
     const saveHighlight = async (highlight) => {
         try {
             const response = await axios.post('http://127.0.0.1:5000/save', highlight);
-            console.log('Highlight saved:', response.data);
+            console.log('Highlight saved:', response.data.data);
+            onSaveHighlight(response.data.data);
         } catch (error) {
             console.error('Error saving highlight:', error);
         }
     };
 
     const renderHighlightTarget = (props) => {
-        if (highlightEnabled) {
+        if (highlightEnabled && !processingHighlight.current) {
+            processingHighlight.current = true;
+
             setTimeout(() => {
                 console.log('Selected Text:', props.selectedText);
                 console.log('Highlight Areas:', props.highlightAreas);
@@ -52,6 +50,9 @@ const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor }) => {
                 });
                 
                 props.toggle(); // Close the selection UI
+
+                processingHighlight.current = false; 
+                
             }, 0);
         }
 

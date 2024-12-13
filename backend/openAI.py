@@ -43,12 +43,24 @@ api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
 
 # Make the API call
-response = client.chat.completions.create(
-    model="gpt-3.5-turbo",
-    messages=[
-        {"role": "user", "content": "What is the capital of France?"}
-    ]
-)
+# response = client.chat.completions.create(
+#     model="gpt-3.5-turbo",
+#     messages=[
+#         {"role": "user", "content": "What is the capital of France?"}
+#     ]
+# )
 
-# Print the response
-print(response.choices[0].message.content)
+# # Print the response
+# print(response.choices[0].message.content)
+
+def generate_response(query):
+    better_query = f"explain this: {query}"
+
+    response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[{"role": "user", "content": better_query}]
+    )
+
+    final_response = response.choices[0].message.content
+
+    return final_response
