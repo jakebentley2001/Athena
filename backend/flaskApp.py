@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from openAI import generate_response
-
+from generation import generate_response
+from chunking import generate_chunks
 
 app = Flask(__name__)
 
@@ -11,6 +11,10 @@ CORS(app)
 # In-memory storage for notes and highlights
 notes_and_highlights = []
 
+global chunks
+global chunk_embeddings
+chunks, chunk_embeddings = generate_chunks('../public/Athena.pdf')
+
 @app.route('/save', methods=['POST'])
 def save_note():
     data = request.json  # Get JSON data from the request
@@ -19,7 +23,7 @@ def save_note():
     
     # Append the note and highlights to the in-memory list
     notes_and_highlights.append(data)
-    openai_response = generate_response(data['note'])
+    openai_response = generate_response(data['note'], chunks, chunk_embeddings)
     return jsonify({'message': 'Note saved successfully', 'data': openai_response}), 200
 
 @app.route('/notes', methods=['GET'])
