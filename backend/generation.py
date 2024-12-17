@@ -36,10 +36,18 @@ def generate_response(question, paper_chunks, chunk_embeddings):
     context = get_most_relevant_chunk(question, paper_chunks, chunk_embeddings)
 
 
+    # prompt = f"""
+    #     Context: {context}
+
+    #     Task: Help me understand this text {question}
+
+    #     Answer:
+    #     """
+
     prompt = f"""
         Context: {context}
 
-        Task: Help me understand this text {question}
+        Task: Explain this in depth highlighing key understandings I need to have: {question}
 
         Answer:
         """

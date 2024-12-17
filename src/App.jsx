@@ -42,13 +42,6 @@ const App = () => {
 
     const textAreaRef = useRef();
 
-    // useEffect(() => {
-    //     if (textAreaRef.current) {
-    //         textAreaRef.current.style.height = 'auto';
-    //         textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
-    //     }
-    // }, [notes]); // Run when notes updat
-
     useEffect(() => {
       const textareas = document.querySelectorAll('textarea');
       textareas.forEach((textarea) => {
@@ -58,14 +51,13 @@ const App = () => {
   }, [notes]); // Trigger when notes update
 
 
-
     return (
-        <div className="flex flex-col h-screen w-full m-0 p-0">
+        <div className="flex flex-col h-screen w-full m-0 p-0  bg-gray-900 text-white">
             {/* Top bar with highlight toggle and color selection */}
-            <div className="p-4 bg-gray-200 border-b border-gray-300 flex items-center gap-4">
+            <div className="p-2 bg-gray-900 border-b border-gray-700 flex items-center gap-4">
                 <button
                     className={`px-4 py-2 rounded ${
-                        highlightEnabled ? 'bg-blue-500 text-white' : 'bg-gray-500 text-gray-100'
+                        highlightEnabled ? 'bg-blue-600 text-white' : 'bg-gray-600 text-gray-300'
                     }`}
                     onClick={() => setHighlightEnabled((prev) => !prev)}
                 >
@@ -76,21 +68,21 @@ const App = () => {
                 <div className="flex items-center gap-2">
                     <button
                         className={`w-8 h-8 rounded-full border-2 ${
-                            currentColor === 'yellow' ? 'border-black' : 'border-transparent'
+                            currentColor === 'yellow' ? 'border-white' : 'border-transparent'
                         }`}
                         style={{ backgroundColor: 'yellow' }}
                         onClick={() => setCurrentColor('yellow')}
                     ></button>
                     <button
                         className={`w-8 h-8 rounded-full border-2 ${
-                            currentColor === 'blue' ? 'border-black' : 'border-transparent'
+                            currentColor === 'blue' ? 'border-white' : 'border-transparent'
                         }`}
                         style={{ backgroundColor: 'blue' }}
                         onClick={() => setCurrentColor('blue')}
                     ></button>
                     <button
                         className={`w-8 h-8 rounded-full border-2 ${
-                            currentColor === 'green' ? 'border-black' : 'border-transparent'
+                            currentColor === 'green' ? 'border-white' : 'border-transparent'
                         }`}
                         style={{ backgroundColor: 'green' }}
                         onClick={() => setCurrentColor('green')}
@@ -100,7 +92,7 @@ const App = () => {
 
             <div className="flex grow">
                 {/* PDF Viewer Section */}
-                <div className="bg-gray-100">
+                <div className="bg-gray-800">
                     <PdfViewer
                         pdfUrl={pdfUrl}
                         pdfWidth={`${(window.innerWidth * pdfWidth) / 100}`}
@@ -113,7 +105,7 @@ const App = () => {
 
                 {/* Resizable Divider */}
                 <div
-                    className="w-4 bg-gray-400 cursor-col-resize"
+                    className="w-4 bg-gray-700 cursor-col-resize"
                     onMouseDown={() => {
                         document.addEventListener('mousemove', handleDrag);
                         document.addEventListener('mouseup', () => {
@@ -128,16 +120,18 @@ const App = () => {
                       display: 'flex', 
                       flexDirection: 'column', 
                       alignItems: 'center'}} 
-                    className="bg-white p-4"
+                    className="bg-gray-800 p-4 text-white"
                 >
-                    <h2 className="text-xl font-bold text-black mb-4">Notes</h2>
+                    <h2 className="text-xl font-bold text-gray-100 mb-4">Notes</h2>
  
                     <div className="flex flex-col gap-2 w-full">
                     {notes.map((note) => (
                         <div key={note.id} className="flex items-center gap-2">
+                      
                             <textarea
-                                className="w-full border border-gray-300 rounded p-2"
+                                className="w-full border border-gray-600 rounded p-2"
                                 value={note.text}
+            
                                 onChange={(e) => handleNoteChange(note.id, e.target.value)}
                                 style={{
                                     height: 'auto', // Reset the height
@@ -149,13 +143,14 @@ const App = () => {
                                     e.target.style.height = `${e.target.scrollHeight}px`;
                                     console.log(e.target.scrollHeight);// Adjust height
                                 }}
-                            ></textarea>
+                            >
+                            </textarea>
                         </div>
                     ))}  
                     </div>
                     <button
                         style={{ marginTop: '20px' }} // Adjust the spacing below the notes
-                        className="px-4 py-2 bg-white text-black border border-gray-300 rounded"
+                        className="px-4 py-2 bg-gray-700 text-gray-300 border border-gray-600 rounded"
                         onClick={handleAddNote}
                     >
                         +

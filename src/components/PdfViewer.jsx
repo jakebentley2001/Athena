@@ -94,11 +94,12 @@ const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor, onSaveH
 
     return (
         <div
-            className="border border-gray-300 rounded shadow-md bg-white"
+            className="border border-gray-800 rounded shadow-md bg-white"
             style={{ width: `${pdfWidth}px`, height: '100vh' }}
         >
+   
             <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                <Viewer fileUrl={pdfUrl} plugins={[highlightPluginInstance]} />
+                <Viewer fileUrl={pdfUrl} plugins={[highlightPluginInstance]} theme="dark" /> 
             </Worker>
         </div>
     );
