@@ -13,7 +13,7 @@ notes_and_highlights = []
 
 global chunks
 global chunk_embeddings
-chunks, chunk_embeddings = generate_chunks('../public/Athena.pdf')
+chunks, chunk_embeddings = generate_chunks('../public/dpo.pdf')
 
 
 @app.route('/save', methods=['POST'])
