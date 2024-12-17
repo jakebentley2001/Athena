@@ -66,27 +66,30 @@ const App = () => {
 
                 {/* Color Selection Buttons */}
                 <div className="flex items-center gap-2">
-                    <button
-                        className={`w-8 h-8 rounded-full border-2 ${
-                            currentColor === 'yellow' ? 'border-white' : 'border-transparent'
-                        }`}
-                        style={{ backgroundColor: 'yellow' }}
-                        onClick={() => setCurrentColor('yellow')}
-                    ></button>
-                    <button
-                        className={`w-8 h-8 rounded-full border-2 ${
-                            currentColor === 'blue' ? 'border-white' : 'border-transparent'
-                        }`}
-                        style={{ backgroundColor: 'blue' }}
-                        onClick={() => setCurrentColor('blue')}
-                    ></button>
-                    <button
-                        className={`w-8 h-8 rounded-full border-2 ${
-                            currentColor === 'green' ? 'border-white' : 'border-transparent'
-                        }`}
-                        style={{ backgroundColor: 'green' }}
-                        onClick={() => setCurrentColor('green')}
-                    ></button>
+                        <img
+                            src="/highlighter.png"
+                            alt="Highlighter"
+                            className={`w-8 h-8 cursor-pointer ${
+                                currentColor === 'yellow' ? 'drop-shadow-[0_0_4px_white]' : ''
+                            }`}
+                            onClick={() => setCurrentColor('yellow')}
+                        />
+                         <img
+                            src="/question.png"
+                            alt="Question"
+                            className={`w-8 h-8 cursor-pointer ${
+                                currentColor === 'blue' ? 'drop-shadow-[0_0_4px_white]' : ''
+                            }`}
+                            onClick={() => setCurrentColor('blue')}
+                        />  
+                         <img
+                            src="/brain.png"
+                            alt="Brain"
+                            className={`w-8 h-8 cursor-pointer ${
+                                currentColor === 'green' ? 'drop-shadow-[0_0_4px_white]' : ''
+                            }`}
+                            onClick={() => setCurrentColor('green')}
+                        />  
                 </div>
             </div>
 
