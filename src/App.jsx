@@ -53,72 +53,80 @@ const App = () => {
       });
   }, [notes]); // Trigger when notes update
 
-  
-    return (
-        <div className="flex flex-col h-screen w-full m-0 p-0  bg-grau-900 text-white">
-            {/* Top bar with highlight toggle and color selection */}
-            <div className="p-2 bg-gray-900 border-b border-gray-700 flex items-center gap-4">
-                <button
-                    className={`px-4 py-2 rounded ${
-                        highlightEnabled ? 'bg-blue-600 text-white' : 'bg-gray-600 text-gray-300'
+return (
+    <div className="flex flex-col h-screen w-full m-0 p-0 bg-gray-900 text-white">
+        {/* Top bar */}
+        <div className="p-2 bg-gray-900 border-b border-gray-700 flex items-center gap-4 sticky top-0 z-50">
+            <div className="flex items-center gap-2">
+                <img
+                    src="/highlighter.png"
+                    alt="Highlighter"
+                    className={`w-8 h-8 cursor-pointer ${
+                        highlightEnabled && currentColor === 'yellow' ? 'drop-shadow-[0_0_4px_white]' : ''
                     }`}
-                    onClick={() => setHighlightEnabled((prev) => !prev)}
-                >
-                    {highlightEnabled ? 'Disable Highlighting' : 'Enable Highlighting'}
-                </button>
+                    onClick={() => {
+                        setHighlightEnabled(true);
+                        setCurrentColor('yellow');
+                    }}
+                />
+                <img
+                    src="/question.png"
+                    alt="Question"
+                    className={`w-8 h-8 cursor-pointer ${
+                        highlightEnabled && currentColor === 'blue' ? 'drop-shadow-[0_0_4px_white]' : ''
+                    }`}
+                    onClick={() => {
+                        setHighlightEnabled(true);
+                        setCurrentColor('blue');
+                    }}
+                />
+                <img
+                    src="/brain.png"
+                    alt="Brain"
+                    className={`w-8 h-8 cursor-pointer ${
+                        highlightEnabled && currentColor === 'green' ? 'drop-shadow-[0_0_4px_white]' : ''
+                    }`}
+                    onClick={() => {
+                        setHighlightEnabled(true);
+                        setCurrentColor('green');
+                    }}
+                />
+            </div>
+        </div>
 
-                {/* Color Selection Buttons */}
-                <div className="flex items-center gap-2">
-                        <img
-                            src="/highlighter.png"
-                            alt="Highlighter"
-                            className={`w-8 h-8 cursor-pointer ${
-                                currentColor === 'yellow' ? 'drop-shadow-[0_0_4px_white]' : ''
-                            }`}
-                            onClick={() => setCurrentColor('yellow')}
-                        />
-                         <img
-                            src="/question.png"
-                            alt="Question"
-                            className={`w-8 h-8 cursor-pointer ${
-                                currentColor === 'blue' ? 'drop-shadow-[0_0_4px_white]' : ''
-                            }`}
-                            onClick={() => setCurrentColor('blue')}
-                        />  
-                         <img
-                            src="/brain.png"
-                            alt="Brain"
-                            className={`w-8 h-8 cursor-pointer ${
-                                currentColor === 'green' ? 'drop-shadow-[0_0_4px_white]' : ''
-                            }`}
-                            onClick={() => setCurrentColor('green')}
-                        />  
-                </div>
+        {/* Main content */}
+        <div className="flex grow">
+            {/* PDF Viewer */}
+            <div
+                className="bg-gray-800 overflow-y-scroll"
+                style={{ width: `${pdfWidth}%`, height: 'calc(100vh - 50px)' }}
+            >
+                <PdfViewer
+                    pdfUrl={pdfUrl}
+                    pdfWidth={`${(window.innerWidth * pdfWidth) / 100}`}
+                    highlightEnabled={highlightEnabled}
+                    highlightColor={currentColor}
+                    onSaveHighlight={handleSaveHighlight}
+                    onAddNote={handleAddNote}
+                />
             </div>
 
-            <div className="flex grow">
-                {/* PDF Viewer Section */}
-                <div className="bg-gray-800">
-                    <PdfViewer
-                        pdfUrl={pdfUrl}
-                        pdfWidth={`${(window.innerWidth * pdfWidth) / 100}`}
-                        highlightEnabled={highlightEnabled}
-                        highlightColor={currentColor}
-                        onSaveHighlight={handleSaveHighlight}  
-                        onAddNote={handleAddNote}
-                    />
-                </div>
+            {/* Divider */}
+            <div
+                className="w-4 bg-gray-700 cursor-col-resize"
+                onMouseDown={() => {
+                    document.addEventListener('mousemove', handleDrag);
+                    document.addEventListener('mouseup', () => {
+                        document.removeEventListener('mousemove', handleDrag);
+                    });
+                }}
+            ></div>
 
-                {/* Resizable Divider */}
-                <div
-                    className="w-4 bg-gray-700 cursor-col-resize"
-                    onMouseDown={() => {
-                        document.addEventListener('mousemove', handleDrag);
-                        document.addEventListener('mouseup', () => {
-                            document.removeEventListener('mousemove', handleDrag);
-                        });
-                    }}
-                ></div>
+            {/* Notes Section */}
+            <div
+                className="bg-gray-700 overflow-y-scroll"
+                style={{ width: `${100 - pdfWidth}%`, height: 'calc(100vh - 50px)' }}
+            >
                 <NotesSection
                     notes={notes}
                     handleNoteChange={handleNoteChange}
@@ -127,8 +135,8 @@ const App = () => {
                 />
             </div>
         </div>
-    );
+    </div>
+);
 };
 
 export default App;
-
