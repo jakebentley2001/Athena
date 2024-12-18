@@ -17,6 +17,7 @@ const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor, onSaveH
     const saveHighlight = async (highlight) => {
         try {
             const response = await axios.post('http://127.0.0.1:5000/save', highlight);
+            console.log(highlight);
             const backendResponse = response.data.data;
 
             console.log('Highlight saved:', backendResponse);

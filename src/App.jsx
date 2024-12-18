@@ -1,6 +1,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import PdfViewer from './components/PdfViewer';
+import axios from 'axios';
+import NotesSection from './components/NotesSection';
+
 
 const App = () => {
     const [pdfWidth, setPdfWidth] = useState(50); // Initial width as a percentage of screen width
@@ -50,9 +53,9 @@ const App = () => {
       });
   }, [notes]); // Trigger when notes update
 
-
+  
     return (
-        <div className="flex flex-col h-screen w-full m-0 p-0  bg-gray-900 text-white">
+        <div className="flex flex-col h-screen w-full m-0 p-0  bg-grau-900 text-white">
             {/* Top bar with highlight toggle and color selection */}
             <div className="p-2 bg-gray-900 border-b border-gray-700 flex items-center gap-4">
                 <button
@@ -116,49 +119,12 @@ const App = () => {
                         });
                     }}
                 ></div>
-
-                {/* Notes Section */}
-                <div
-                    style={{ width: `calc(${100 - pdfWidth}% - 1px)`,
-                      display: 'flex', 
-                      flexDirection: 'column', 
-                      alignItems: 'center'}} 
-                    className="bg-gray-800 p-4 text-white"
-                >
-                    <h2 className="text-xl font-bold text-gray-100 mb-4">Notes</h2>
- 
-                    <div className="flex flex-col gap-2 w-full">
-                    {notes.map((note) => (
-                        <div key={note.id} className="flex items-center gap-2">
-                      
-                            <textarea
-                                className="w-full border border-gray-600 rounded p-2"
-                                value={note.text}
-            
-                                onChange={(e) => handleNoteChange(note.id, e.target.value)}
-                                style={{
-                                    height: 'auto', // Reset the height
-                                    minHeight: '50px', // Optional: Set a minimum height
-                                    overflow: 'hidden', // Hide scrollbar
-                                }}
-                                onInput={(e) => {
-                                    e.target.style.height = 'auto'; // Reset height to calculate new height
-                                    e.target.style.height = `${e.target.scrollHeight}px`;
-                                    console.log(e.target.scrollHeight);// Adjust height
-                                }}
-                            >
-                            </textarea>
-                        </div>
-                    ))}  
-                    </div>
-                    <button
-                        style={{ marginTop: '20px' }} // Adjust the spacing below the notes
-                        className="px-4 py-2 bg-gray-700 text-gray-300 border border-gray-600 rounded"
-                        onClick={handleAddNote}
-                    >
-                        +
-                    </button>
-                </div>
+                <NotesSection
+                    notes={notes}
+                    handleNoteChange={handleNoteChange}
+                    handleAddNote={handleAddNote}
+                    setNotes={setNotes}
+                />
             </div>
         </div>
     );
