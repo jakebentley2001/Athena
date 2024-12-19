@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Viewer, Worker } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 //import { highlightPlugin, MessageIcon, Trigger } from '@react-pdf-viewer/highlight';
@@ -6,12 +6,15 @@ import '@react-pdf-viewer/highlight/lib/styles/index.css';
 import { Button, Position, Tooltip } from '@react-pdf-viewer/core';
 import { highlightPlugin, HighlightArea, MessageIcon, RenderHighlightContentProps,
     RenderHighlightsProps, RenderHighlightTargetProps,} from '@react-pdf-viewer/highlight';
+
 import axios from 'axios';
+
 
 const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor, onSaveHighlight, onAddNote, onHighlightClick }) => {
     const [highlights, setHighlights] = useState([]);
     const idCounter = useRef(0);
     const processingHighlight = useRef(false); 
+    const [debouncedPdfWidth, setDebouncedPdfWidth] = useState(pdfWidth);
 
 
     const saveHighlight = async (highlight) => {
@@ -125,6 +128,16 @@ const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor, onSaveH
         trigger: 'TextSelection',
     });
 
+    // Debounce pdfWidth updates
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedPdfWidth(pdfWidth);
+        }, 300); // Adjust delay as needed
+
+        return () => clearTimeout(handler);
+    }, [pdfWidth]);
+ 
+
     return (
         <div
             className="border border-gray-800 rounded shadow-md bg-white"
@@ -132,7 +145,11 @@ const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor, onSaveH
         >
    
             <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                <Viewer fileUrl={pdfUrl} plugins={[highlightPluginInstance]} theme="dark" /> 
+                <Viewer key={debouncedPdfWidth} 
+                        fileUrl={pdfUrl} 
+                        plugins={[highlightPluginInstance]} 
+                        theme="dark"
+                        defaultScale={debouncedPdfWidth /700} /> 
             </Worker>
         </div>
     );
