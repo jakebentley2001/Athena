@@ -52,7 +52,7 @@ const NotesSection = ({ notes, handleNoteChange, handleAddNote, setNotes }) => {
                                             try {
                                                 const questionObject = { note: question , highlights: 'Hello'};
                                                 console.log(questionObject);
-                                                const response = await axios.post('http://127.0.0.1:5000/save', questionObject );
+                                                const response = await axios.post('http://127.0.0.1:5000/question', questionObject );
                                                 const backendResponse = response.data.data;
                                                 console.log('Question response:', backendResponse);
 

@@ -20,13 +20,26 @@ const App = () => {
         }
     };
 
+    // const handleSaveHighlight = (highlight) => {
+    //     setNotes((prevNotes) => [
+    //         ...prevNotes,
+    //         { id: prevNotes.length + 1, text: `LLM Response: ${highlight}` },
+    //     ]);
+    
+    // };
+
     const handleSaveHighlight = (highlight) => {
+        const responseText = highlight === 'hello' 
+            ? 'Add notes here' 
+            : `LLM Response: ${highlight}`;
+        
         setNotes((prevNotes) => [
             ...prevNotes,
-            { id: prevNotes.length + 1, text: `LLM Response: ${highlight}` },
+            { id: prevNotes.length + 1, text: responseText },
         ]);
-    
     };
+
+ 
 
     const handleAddNote = () => {
       setNotes((prevNotes) => [
@@ -55,7 +68,7 @@ const App = () => {
 
 return (
     <div className="flex flex-col h-screen w-full m-0 p-0 bg-gray-900 text-white">
-        {/* Top bar */}
+        {/* top bar */}
         <div className="p-2 bg-gray-900 border-b border-gray-700 flex items-center gap-4 sticky top-0 z-50">
             <div className="flex items-center gap-2">
                 <img
@@ -96,6 +109,7 @@ return (
 
         {/* Main content */}
         <div className="flex grow">
+
             {/* PDF Viewer */}
             <div
                 className="bg-gray-800 overflow-y-scroll"
@@ -113,13 +127,15 @@ return (
 
             {/* Divider */}
             <div
-                className="w-4 bg-gray-700 cursor-col-resize"
-                onMouseDown={() => {
-                    document.addEventListener('mousemove', handleDrag);
-                    document.addEventListener('mouseup', () => {
-                        document.removeEventListener('mousemove', handleDrag);
-                    });
-                }}
+                    className="w-4 bg-gray-600 cursor-col-resize"
+                    style={{ userSelect: 'none' }} // Prevents text selection
+                    onMouseDown={(e) => {
+                        e.preventDefault(); // Prevents text selection triggered by the mouse event
+                        document.addEventListener('mousemove', handleDrag);
+                        document.addEventListener('mouseup', () => {
+                            document.removeEventListener('mousemove', handleDrag);
+                        });
+                    }}
             ></div>
 
             {/* Notes Section */}

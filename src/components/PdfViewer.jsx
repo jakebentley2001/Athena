@@ -16,12 +16,35 @@ const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor, onSaveH
 
     const saveHighlight = async (highlight) => {
         try {
-            const response = await axios.post('http://127.0.0.1:5000/save', highlight);
-            console.log(highlight);
-            const backendResponse = response.data.data;
+            // Determine the endpoint based on the highlight color
+            let endpointUrl = '';
+            switch (highlightColor) {
+                case 'yellow':
+                    endpointUrl = 'http://127.0.0.1:5000/save-yellow';
+                    break;
+                case 'blue':
+                    endpointUrl = 'http://127.0.0.1:5000/save-blue';
+                    break;
+                case 'green':
+                    endpointUrl = 'http://127.0.0.1:5000/save-green';
+                    break;
+                default:
+                    console.error('Invalid highlight color');
+                    return;
+            }
 
-            console.log('Highlight saved:', backendResponse);
-            onSaveHighlight(backendResponse);
+            // Send the highlight to the determined endpoint
+            const response = await axios.post(endpointUrl, highlight);
+            console.log(highlight);
+
+            if (highlightColor === 'yellow') {
+                onSaveHighlight("hello");
+            } else {
+                const backendResponse = response.data.data;
+                console.log('Highlight saved:', backendResponse);
+                // Pass the saved highlight data to the parent component
+                onSaveHighlight(backendResponse);
+            }
 
         } catch (error) {
             console.error('Error saving highlight:', error);

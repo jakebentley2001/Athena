@@ -31,7 +31,7 @@ def get_most_relevant_chunk(question, chunks, chunk_embeddings):
     return chunks[most_relevant_index]
 
 
-def generate_response(question, paper_chunks, chunk_embeddings):
+def generate_response(question, paper_chunks, chunk_embeddings, color):
 
     context = get_most_relevant_chunk(question, paper_chunks, chunk_embeddings)
 
@@ -44,13 +44,28 @@ def generate_response(question, paper_chunks, chunk_embeddings):
     #     Answer:
     #     """
 
-    prompt = f"""
+    prompt_green = f"""
         Context: {context}
 
-        Task: Explain this in depth highlighing key understandings I need to have: {question}
+        Task: Explain this in depth highlighting key understandings I need to have: {question}
 
         Answer:
         """
+    
+    prompt_blue = f"""
+        Context: {context}
+
+        Task: Quickly explain what this text means: {question}
+
+        Answer:
+        """
+    
+    if color == 'green':
+        prompt = prompt_green
+    elif color == 'blue':
+        prompt = prompt_blue
+    else:
+        prompt = 'Hi How are you'
 
     response = client.chat.completions.create(
     model="gpt-3.5-turbo",
