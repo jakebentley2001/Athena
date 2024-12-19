@@ -36,14 +36,6 @@ def generate_response(question, paper_chunks, chunk_embeddings, color):
     context = get_most_relevant_chunk(question, paper_chunks, chunk_embeddings)
 
 
-    # prompt = f"""
-    #     Context: {context}
-
-    #     Task: Help me understand this text {question}
-
-    #     Answer:
-    #     """
-
     prompt_green = f"""
         Context: {context}
 
@@ -60,10 +52,20 @@ def generate_response(question, paper_chunks, chunk_embeddings, color):
         Answer:
         """
     
+    prompt_red = f"""
+        Context: {context}
+
+        Task: Answer this question: {question}
+
+        Answer:
+        """
+    
     if color == 'green':
         prompt = prompt_green
     elif color == 'blue':
         prompt = prompt_blue
+    elif color == 'red':
+        prompt = prompt_red
     else:
         prompt = 'Hi How are you'
 

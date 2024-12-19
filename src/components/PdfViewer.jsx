@@ -8,7 +8,7 @@ import { highlightPlugin, HighlightArea, MessageIcon, RenderHighlightContentProp
     RenderHighlightsProps, RenderHighlightTargetProps,} from '@react-pdf-viewer/highlight';
 import axios from 'axios';
 
-const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor, onSaveHighlight, onAddNote }) => {
+const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor, onSaveHighlight, onAddNote, onHighlightClick }) => {
     const [highlights, setHighlights] = useState([]);
     const idCounter = useRef(0);
     const processingHighlight = useRef(false); 
@@ -98,11 +98,20 @@ const PdfViewer = ({ pdfUrl, pdfWidth, highlightEnabled, highlightColor, onSaveH
                                 style={Object.assign(
                                     {},
                                     {
-                                        background: highlight.color, // Use the stored color
+                                        width: '100px',
+                                        height: '50px',
+                                        background: highlight.color,
+                                        cursor: 'pointer',
+                                        position: 'absolute',
+                                        top: '10px',
+                                        left: '10px',
+                                        zIndex: 100,
                                         opacity: 0.2,
+                                        pointerEvents: 'auto'
                                     },
                                     props.getCssProperties(area, props.rotation) // Apply CSS for the highlight area
                                 )}
+                                onClick={() => onHighlightClick(highlight.id)} // Notify parent on click
                             />
                         ))}
                 </React.Fragment>

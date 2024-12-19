@@ -1,7 +1,18 @@
-import React from 'react';
 import axios from 'axios';
+import React, { useEffect, useRef } from 'react';
 
-const NotesSection = ({ notes, handleNoteChange, handleAddNote, setNotes }) => {
+const NotesSection = ({ notes, handleNoteChange, handleAddNote, setNotes, activeHighlightId }) => {
+
+    const noteRefs = useRef({}); // Store refs for all notes
+
+    useEffect(() => {
+        if (activeHighlightId && noteRefs.current[activeHighlightId]) {
+            const noteElement = noteRefs.current[activeHighlightId];
+            noteElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, [activeHighlightId]);
+
+
     return (
         <div
             style={{
@@ -15,8 +26,14 @@ const NotesSection = ({ notes, handleNoteChange, handleAddNote, setNotes }) => {
             <h2 className="text-xl font-bold text-gray-100 mb-4">Playground</h2>
             <div className="flex flex-col gap-2 w-full">
                 {notes.map((note) => (
-                    <div key={note.id} className="flex flex-col gap-2">
-                        <div className="flex items-center gap-2">
+                <div 
+                key={note.id}
+                ref={(el) => (noteRefs.current[note.id] = el)}  
+                className={`p-4 rounded ${
+                    note.id === activeHighlightId ? 'border-2 border-white' : 'border border-gray-600'
+                }`}
+                 >
+                <div className="flex items-center gap-2">
                             <textarea
                                 className="w-full border border-gray-600 rounded p-2"
                                 value={note.text}

@@ -10,6 +10,7 @@ const App = () => {
     const [highlightEnabled, setHighlightEnabled] = useState(false); // Highlight toggle state
     const [currentColor, setCurrentColor] = useState('yellow'); // Current highlight color
     const [notes, setNotes] = useState([]);
+    const [activeHighlightId, setActiveHighlightId] = useState(null); // Track active highlight
     const pdfUrl = '/dpo.pdf';
 
     const handleDrag = (e) => {
@@ -20,13 +21,6 @@ const App = () => {
         }
     };
 
-    // const handleSaveHighlight = (highlight) => {
-    //     setNotes((prevNotes) => [
-    //         ...prevNotes,
-    //         { id: prevNotes.length + 1, text: `LLM Response: ${highlight}` },
-    //     ]);
-    
-    // };
 
     const handleSaveHighlight = (highlight) => {
         const responseText = highlight === 'hello' 
@@ -56,6 +50,10 @@ const App = () => {
         );
     };
 
+    const handleHighlightClick = (highlightId) => {
+        setActiveHighlightId(highlightId); // Set the active highlight
+    };
+
     const textAreaRef = useRef();
 
     useEffect(() => {
@@ -65,6 +63,8 @@ const App = () => {
           textarea.style.height = `${textarea.scrollHeight}px`; // Set new height based on content
       });
   }, [notes]); // Trigger when notes update
+
+
 
 return (
     <div className="flex flex-col h-screen w-full m-0 p-0 bg-gray-900 text-white">
@@ -122,6 +122,7 @@ return (
                     highlightColor={currentColor}
                     onSaveHighlight={handleSaveHighlight}
                     onAddNote={handleAddNote}
+                    onHighlightClick={handleHighlightClick}
                 />
             </div>
 
@@ -148,6 +149,7 @@ return (
                     handleNoteChange={handleNoteChange}
                     handleAddNote={handleAddNote}
                     setNotes={setNotes}
+                    activeHighlightId={activeHighlightId}
                 />
             </div>
         </div>
