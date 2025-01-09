@@ -2,71 +2,102 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from generation import generate_response
 from chunking import generate_chunks
+from pymongo import MongoClient
+import bcrypt
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
-
-# Enable CORS for all routes
 CORS(app)
 
-# In-memory storage for notes and highlights
-notes_and_highlights_questions = []
-notes_and_highlights = {
-    'yellow': [],
-    'blue': [],
-    'green': []
-}
+DB_PASSWORD = os.getenv("DB_PASSWORD")
 
-global chunks
-global chunk_embeddings
-chunks, chunk_embeddings = generate_chunks('../public/dpo.pdf')
+access_string = f"mongodb+srv://jakebentley2001:{DB_PASSWORD}@athena-cluster.dpay7.mongodb.net/?retryWrites=true&w=majority&appName=Athena-Cluster"
 
-@app.route('/question', methods=['POST'])
-def save_note():
-    data = request.json  # Get JSON data from the request
-    if not data or 'note' not in data or 'highlights' not in data:
-        return jsonify({'error': 'Invalid data'}), 400
+client = MongoClient(access_string)
+
+db = client["User_db"]
+users_collection = db["Users"]
+papers_collection = db["Papers"]
+
+@app.route("/")
+def home():
+    return "Flask backend is running"
+
+# Authentication ENPOINTs
+
+@app.route("/api/signup", methods=["POST"])
+def signup():
+    data = request.json
+    email = data.get("email")
+    password = data.get("password")
+
+    if not email or not password:
+        return jsonify({"error": "Missing fields"}), 400
     
-    # Append the note and highlights to the in-memory list
-    notes_and_highlights_questions.append(data)
-    openai_response = generate_response(data['note'], chunks, chunk_embeddings, color = 'red')
-    return jsonify({'message': 'Note saved successfully', 'data': openai_response}), 200
+    #Checks if the user exists
+    existing_user = users_collection.find_one({"email":email})
+    if existing_user:
+        return jsonify({"error":"user already exists"}), 400
+    
+    new_user = {
+        "email": email,
+        "password": password,
+        "papers": [] #an array of paper IDS or objects
+    }
+
+    users_collection.insert_one(new_user)
+
+    return jsonify({"message": "user successfully added"}), 201
 
 
-def save_highlight(color):
-    data = request.json  # Get JSON data from the request
-    if not data or 'note' not in data or 'highlights' not in data:
-        return jsonify({'error': 'Invalid data'}), 400
+@app.route("/api/login", methods = ["POST"])
+def login():
+    data = request.json
+    email = data.get("email")
+    password = data.get("password")
 
-    # Save the highlight under the corresponding color
-    notes_and_highlights[color].append(data)
-
-    if color == 'yellow':
-        return "Jake"
-    openai_response = generate_response(data['note'], chunks, chunk_embeddings, color)  # Replace with actual params if needed
-    return jsonify({'message': f'Highlight saved successfully for {color}', 'data': openai_response}), 200
-
-
-@app.route('/save-yellow', methods=['POST'])
-def save_yellow():
-    print('Jake')
-    return save_highlight('yellow')
-
-@app.route('/save-blue', methods=['POST'])
-def save_blue():
-    print("Jake 2")
-    return save_highlight('blue')
-
-@app.route('/save-green', methods=['POST'])
-def save_green():
-    print("Jake 3")
-    return save_highlight('green')
+    user = users_collection.find_one({"email":email})
+    if not user:
+        return jsonify({"error":"Invalid Credential, User does not exist"}), 401
+    
+    if password == user["password"]:
+        return jsonify({"messages": "Login Successful"}), 200
+    else:
+        return jsonify({"error":"Invalid Password"}), 401
+    
 
 
+# GET PAPERS
+@app.route("/api/papers/<string:user_email>", methods=["GET"])
+def get_papers(user_email):
+    #Find user by email
+    user = users_collection.find_one({"email": user_email})
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    user_papers = user.get("papers", [])
 
-@app.route('/notes', methods=['GET'])
-def get_notes():
-    # Return all saved notes and highlights
-    return jsonify(notes_and_highlights), 200
+    return jsonify({"papers": user_papers}), 200
 
-if __name__ == '__main__':
+# SEARCH FOR PAPRTS
+@app.route("/api/search_papers", methods=["GET"])
+def search_papers():
+    query_param = request.args.get("query", "").strip()
+
+    if not query_param:
+        return jsonify({"results": []}), 200
+    
+    print(query_param)
+
+    results = [{"_id":"Hello","name":"Jake"}]
+    
+    return jsonify({"results": results}), 200
+
+
+if __name__ == "__main__":
     app.run(debug=True)
+
