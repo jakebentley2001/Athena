@@ -6,6 +6,7 @@ from pymongo import MongoClient
 import bcrypt
 from dotenv import load_dotenv
 import os
+import requests
 
 # Load environment variables from .env file
 load_dotenv()
@@ -83,15 +84,23 @@ def get_papers(user_email):
 
     return jsonify({"papers": user_papers}), 200
 
+SEMANTIC_SCHOLAR_BASE_URL = "https://www.semanticscholar.org/search"
+
 # SEARCH FOR PAPRTS
 @app.route("/api/search_papers", methods=["GET"])
 def search_papers():
-    query_param = request.args.get("query", "").strip()
+    query = request.args.get("query", "").strip()
 
-    if not query_param:
+    if not query:
         return jsonify({"results": []}), 200
     
-    print(query_param)
+    print(query)
+
+    search_url = f"{SEMANTIC_SCHOLAR_BASE_URL}?q={query.replace(' ','+')}"
+
+    response = requests.get(search_url)
+    if response.status_code != 200:
+        return jsonify({'error': 'Failed to fetch data from Sematic Scholare'}), response.status_code
 
     results = [{"_id":"Hello","name":"Jake"}]
     
