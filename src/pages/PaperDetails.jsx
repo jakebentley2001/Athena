@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PdfViewer from './components/PdfViewer';
 import NotesSection from './components/NotesSection';
-import {useParams} from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router-dom';
 
 
 const PaperDetails = () => {
@@ -66,6 +66,12 @@ const PaperDetails = () => {
       });
   }, [notes]); // Trigger when notes update
 
+  const navigate = useNavigate();
+
+    const handleHomeButton = () => {
+        navigate("/home");
+    };
+
 
 
 return (
@@ -106,6 +112,11 @@ return (
                         setCurrentColor('green');
                     }}
                 />
+                <button 
+                    onClick = { handleHomeButton } style = {{width: "50px", height: "30px"}}
+                >
+                    Home
+                </button>
             </div>
         </div>
 

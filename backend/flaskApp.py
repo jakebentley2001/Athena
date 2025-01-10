@@ -136,12 +136,12 @@ def save_papers(user_email):
             return jsonify({"error": "ArXiv ID is requires"}), 400
         
         pdf_url = f"https://arxiv.org/pdf/{arxiv_id}.pdf"
-        print(1)
+        
         response = requests.get(pdf_url)
 
         if response.status_code != 200:
             return jsonify({'error': "Failed to download PDF"}), 400
-        print(2)
+        
         document = {
             "title": title,
             "arxiv_id": arxiv_id,
@@ -149,7 +149,7 @@ def save_papers(user_email):
         }
         
         papers_collection.insert_one(document)
-        print(3)
+        
         users_collection.update_one(
             {"email":user_email},
             {"$addToSet": {"papers": {"name": title, "arxiv_id": arxiv_id}}}
