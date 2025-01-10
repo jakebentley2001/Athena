@@ -7,6 +7,7 @@ import bcrypt
 from dotenv import load_dotenv
 import os
 import requests
+import bson
 
 # Load environment variables from .env file
 load_dotenv()
@@ -84,7 +85,7 @@ def get_papers(user_email):
 
     return jsonify({"papers": user_papers}), 200
 
-SEMANTIC_SCHOLAR_BASE_URL = "https://www.semanticscholar.org/search"
+base_url = "https://api.semanticscholar.org/graph/v1/paper/search"
 
 # SEARCH FOR PAPRTS
 @app.route("/api/search_papers", methods=["GET"])
@@ -94,17 +95,69 @@ def search_papers():
     if not query:
         return jsonify({"results": []}), 200
     
-    print(query)
+    params = {
+        "query": query,
+        "limit": 6,
+        "fields": "title,externalIds,year"
+    }
 
-    search_url = f"{SEMANTIC_SCHOLAR_BASE_URL}?q={query.replace(' ','+')}"
+    try:
+        response = requests.get(base_url, params=params)
+        response.raise_for_status() # raise HTTPError if status != 200
+        data = response.json()
 
-    response = requests.get(search_url)
-    if response.status_code != 200:
-        return jsonify({'error': 'Failed to fetch data from Sematic Scholare'}), response.status_code
+        papers = data.get("data", [])
 
-    results = [{"_id":"Hello","name":"Jake"}]
+        results = []
+
+        for paper in papers:
+            results.append({
+                "title": paper.get("title", "No title"),
+                "ArXiv": paper.get("externalIds",{}).get("ArXiv", ""),
+                "year": paper.get("year","")
+            })
+
+        return jsonify({"results": results}), 200
     
-    return jsonify({"results": results}), 200
+    except requests.exceptions.RequestException as e:
+
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/api/save-paper/<string:user_email>", methods=["POST"])
+def save_papers(user_email):
+    try:
+        # Get the ArXiv ID and title from the request
+        data = request.json
+        arxiv_id = data.get('arxivId')
+        title = data.get('title')
+     
+        if not arxiv_id:
+            return jsonify({"error": "ArXiv ID is requires"}), 400
+        
+        pdf_url = f"https://arxiv.org/pdf/{arxiv_id}.pdf"
+        print(1)
+        response = requests.get(pdf_url)
+
+        if response.status_code != 200:
+            return jsonify({'error': "Failed to download PDF"}), 400
+        print(2)
+        document = {
+            "title": title,
+            "arxiv_id": arxiv_id,
+            "pdf_binary": bson.Binary(response.content)
+        }
+        
+        papers_collection.insert_one(document)
+        print(3)
+        users_collection.update_one(
+            {"email":user_email},
+            {"$addToSet": {"papers": {"name": title, "arxiv_id": arxiv_id}}}
+        )
+        print(4)
+        return jsonify({"message":"Paper saved successfully"}), 201
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
