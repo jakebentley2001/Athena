@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PdfViewer from './components/PdfViewer';
 import NotesSection from './components/NotesSection';
+import {useParams} from 'react-router-dom';
 
 
 const PaperDetails = () => {
@@ -9,7 +10,10 @@ const PaperDetails = () => {
     const [currentColor, setCurrentColor] = useState('yellow'); // Current highlight color
     const [notes, setNotes] = useState([]);
     const [activeHighlightId, setActiveHighlightId] = useState(null); // Track active highlight
-    const pdfUrl = '/dpo.pdf';
+
+    const { paperName } = useParams();
+    const pdfUrl = `http://localhost:5000/api/papers/${encodeURIComponent(paperName)}/pdf`;
+    //const pdfUrl = '/dpo.pdf';
 
     const handleDrag = (e) => {
         const newPdfWidth = (e.clientX / window.innerWidth) * 100;

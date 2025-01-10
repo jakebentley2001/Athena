@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from generation import generate_response
 from chunking import generate_chunks
@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import os
 import requests
 import bson
+import base64, io
 
 # Load environment variables from .env file
 load_dotenv()
@@ -158,6 +159,25 @@ def save_papers(user_email):
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route("/api/papers/<paperName>/pdf", methods=["GET"])
+def get_paper_pdf(paperName):
+
+    paper_doc = papers_collection.find_one({"title": paperName})
+    
+    if not paper_doc:
+        print("1")
+        return jsonify({"error": "Paper not found"}), 404
+    
+    if "pdf_binary" not in paper_doc:
+        print(2)
+        return jsonify({"error": "no PDF data stored for this paper"}), 401
+    
+    pdf_bytes = paper_doc["pdf_binary"]
+
+    pdf_stream = io.BytesIO(pdf_bytes)
+
+    return send_file(pdf_stream, mimetype='application/pdf')
 
 
 if __name__ == "__main__":
