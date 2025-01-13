@@ -180,12 +180,24 @@ def get_paper_pdf(paperName):
 
     return send_file(pdf_stream, mimetype='application/pdf')
 
-@app.route("/api/papers/learning/<topic>", methods=["GET"])
-def get_papers(topic):
+@app.route("/api/papers/learning", methods=["GET","POST"])
+def get_papers_from_llm():
+
+    topic = None
+
+    if request.method == "GET":
+        topic = request.args.get("topic")
+    elif request.method == "POST":
+        data =  request.get_json()
+        if data:
+            topic = data.get("topic", None)
+
+    if not topic:
+        return jsonify({"error":"No topic provided"}), 400
 
     papers_list = get_papers_from_topic(topic)
 
-    return jsonify(papers_list)
+    return jsonify(papers_list), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
