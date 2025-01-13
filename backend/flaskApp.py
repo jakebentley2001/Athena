@@ -9,6 +9,7 @@ import os
 import requests
 import bson
 import base64, io
+from sift import get_papers_from_topic
 
 # Load environment variables from .env file
 load_dotenv()
@@ -179,6 +180,12 @@ def get_paper_pdf(paperName):
 
     return send_file(pdf_stream, mimetype='application/pdf')
 
+@app.route("/api/papers/learning/<topic>", methods=["GET"])
+def get_papers(topic):
+
+    papers_list = get_papers_from_topic(topic)
+
+    return jsonify(papers_list)
 
 if __name__ == "__main__":
     app.run(debug=True)
