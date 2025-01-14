@@ -10,6 +10,7 @@ import requests
 import bson
 import base64, io
 from sift import get_papers_from_topic
+import asyncio
 
 # Load environment variables from .env file
 load_dotenv()
@@ -151,16 +152,19 @@ def save_papers(user_email):
             "pdf_binary": bson.Binary(response.content)
         }
         
-        papers_collection.insert_one(document)
-        
+        result = papers_collection.insert_one(document)
+        print(result)
         users_collection.update_one(
             {"email":user_email},
             {"$addToSet": {"papers": {"name": title, "arxiv_id": arxiv_id}}}
         )
         print(4)
+
+
         return jsonify({"message":"Paper saved successfully"}), 201
     
     except Exception as e:
+        print(str(e))
         return jsonify({"error": str(e)}), 500
     
 
@@ -168,6 +172,7 @@ def save_papers(user_email):
 def get_paper_pdf(paperName):
 
     paper_doc = papers_collection.find_one({"title": paperName})
+
     
     if not paper_doc:
         print("1")
@@ -180,6 +185,16 @@ def get_paper_pdf(paperName):
     pdf_bytes = paper_doc["pdf_binary"]
 
     pdf_stream = io.BytesIO(pdf_bytes)
+
+
+    if "chunks" in paper_doc:
+            global chunks
+            chunks = paper_doc["chunks"]
+
+            global chunk_embeddings
+            chunk_embeddings = paper_doc["chunk_embeddings"]
+    else:
+        addChunksToDataBase(paperName, pdf_bytes)
 
     return send_file(pdf_stream, mimetype='application/pdf')
 
@@ -230,7 +245,6 @@ def find_paper(user_email):
         paper = data.get("data", [])[0]
         print(f"JAKKKKKE:{paper}")
 
-        results = []
 
         arxiv_id = (paper.get("externalIds",{}).get("ArXiv",""))
         if not arxiv_id:
@@ -244,34 +258,105 @@ def find_paper(user_email):
 
         if pdf_response.status_code != 200:
             return jsonify({"error": "Failed to download PDF"}), 400
+        
+        
+        global pdf_binary
+        pdf_binary = bson.Binary(pdf_response.content)
 
         document = ({
                 "title": paper_title,
                 "arxiv_id": id,
-                "pdf_binary": bson.Binary(pdf_response.content)
+                "pdf_binary": pdf_binary
         })
 
-        papers_collection.insert_one(document)
-
+        result = papers_collection.insert_one(document)
+        print(result)
         users_collection.update_one(
             {"email":user_email},
             {"$addToSet": {"papers": {"name": paper_title, "arxiv_id": id}}}
         )
 
 
-        # paper_doc = papers_collection.find_one({"title": paper_title})
-
-        # pdf_bytes = paper_doc["pdf_binary"]
-
-        # pdf_stream = io.BytesIO(pdf_bytes)
-
-        # return send_file(pdf_stream, mimetype='application/pdf')
-
         return jsonify({"results": {"title":paper_title}}), 200
     
     except requests.exceptions.RequestException as e:
 
         return jsonify({"error": str(e)}), 500
+
+
+
+notes_and_highlights_questions = []
+notes_and_highlights = {
+    'yellow': [],
+    'blue': [],
+    'green': []
+}
+
+def addChunksToDataBase(title, pdf_binary):
+    try:
+        print("Jake")
+        #print(pdf_binary)
+        pdf_binary_file = io.BytesIO(pdf_binary)
+
+        global chunks, chunk_embeddings
+        chunks, chunk_embeddings = generate_chunks(pdf_binary_file)
+
+        papers_collection.update_one(
+            {"title": title},
+            {"$set": {"chunks": chunks, "chunk_embeddings": chunk_embeddings}}
+        )
+    except Exception as e:
+        print(f"Error in chunk generation {str(e)}")
+
+
+
+@app.route('/question', methods=['POST'])
+def save_note():
+    data = request.json  # Get JSON data from the request
+    if not data or 'note' not in data or 'highlights' not in data:
+        return jsonify({'error': 'Invalid data'}), 400
+    
+    # Append the note and highlights to the in-memory list
+    notes_and_highlights_questions.append(data)
+    openai_response = generate_response(data['note'], chunks, chunk_embeddings, color = 'red')
+    return jsonify({'message': 'Note saved successfully', 'data': openai_response}), 200
+
+
+def save_highlight(color):
+    data = request.json  # Get JSON data from the request
+    if not data or 'note' not in data or 'highlights' not in data:
+        return jsonify({'error': 'Invalid data'}), 400
+
+    # Save the highlight under the corresponding color
+    notes_and_highlights[color].append(data)
+
+    if color == 'yellow':
+        return "Jake"
+    openai_response = generate_response(data['note'], chunks, chunk_embeddings, color)  # Replace with actual params if needed
+    return jsonify({'message': f'Highlight saved successfully for {color}', 'data': openai_response}), 200
+
+
+@app.route('/save-yellow', methods=['POST'])
+def save_yellow():
+    print('Jake')
+    return save_highlight('yellow')
+
+@app.route('/save-blue', methods=['POST'])
+def save_blue():
+    print("Jake 2")
+    return save_highlight('blue')
+
+@app.route('/save-green', methods=['POST'])
+def save_green():
+    print("Jake 3")
+    return save_highlight('green')
+
+
+
+@app.route('/notes', methods=['GET'])
+def get_notes():
+    # Return all saved notes and highlights
+    return jsonify(notes_and_highlights), 200
 
 
 

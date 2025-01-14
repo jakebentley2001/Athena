@@ -6,7 +6,6 @@ function LearningPage() {
     const [topic, setTopic] = useState("");
     const [papers, setPapers] = useState([]);
     const [errorMsg, setErrorMsg] = useState("");
-
     const [addedPapers, setAddedPapers] = useState([]);
 
     const userEmail = localStorage.getItem("userEmail");
@@ -68,13 +67,12 @@ function LearningPage() {
 
             const data = await response.json();
             console.log("Backend response", data);
-            alert(`Succesffully sent: ${paperTitle}`);
+            //alert(`Succesffully sent: ${paperTitle}`);
         } catch (error) {
             console.error("error", error);
             alert("Error sending paper");
         }
     };
-
 
     return (
         <div style={{ margin: "20px"}} >
