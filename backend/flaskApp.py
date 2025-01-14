@@ -27,6 +27,8 @@ db = client["User_db"]
 users_collection = db["Users"]
 papers_collection = db["Papers"]
 
+base_url = "https://api.semanticscholar.org/graph/v1/paper/search"
+
 @app.route("/")
 def home():
     return "Flask backend is running"
@@ -87,7 +89,6 @@ def get_papers(user_email):
 
     return jsonify({"papers": user_papers}), 200
 
-base_url = "https://api.semanticscholar.org/graph/v1/paper/search"
 
 # SEARCH FOR PAPRTS
 @app.route("/api/search_papers", methods=["GET"])
@@ -124,7 +125,8 @@ def search_papers():
     except requests.exceptions.RequestException as e:
 
         return jsonify({"error": str(e)}), 500
-    
+
+
 @app.route("/api/save-paper/<string:user_email>", methods=["POST"])
 def save_papers(user_email):
     try:
@@ -161,6 +163,7 @@ def save_papers(user_email):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+
 @app.route("/api/papers/<paperName>/pdf", methods=["GET"])
 def get_paper_pdf(paperName):
 
@@ -180,6 +183,7 @@ def get_paper_pdf(paperName):
 
     return send_file(pdf_stream, mimetype='application/pdf')
 
+
 @app.route("/api/papers/learning", methods=["GET","POST"])
 def get_papers_from_llm():
 
@@ -195,9 +199,81 @@ def get_papers_from_llm():
     if not topic:
         return jsonify({"error":"No topic provided"}), 400
 
-    papers_list = get_papers_from_topic(topic)
+    global papers_list_topic
+    papers_list_topic = get_papers_from_topic(topic)
 
-    return jsonify(papers_list), 200
+    return jsonify(papers_list_topic), 200
+
+@app.route("/api/papers/find_paper/<string:user_email>", methods=["POST"])
+def find_paper(user_email):
+
+    print("HELLLOOOO JAKE")
+
+    find_this_paper = request.get_json()
+    paper_title = find_this_paper.get('title','')
+    print(paper_title)
+    if not paper_title:
+        return jsonify({"results": []}), 200
+
+    params = {
+        "query": paper_title,
+        "limit": 1,
+        "fields": "title,externalIds,year"
+    }
+
+
+    try:
+        response = requests.get(base_url, params=params)
+        response.raise_for_status() # raise HTTPError if status != 200
+        data = response.json()
+
+        paper = data.get("data", [])[0]
+        print(f"JAKKKKKE:{paper}")
+
+        results = []
+
+        arxiv_id = (paper.get("externalIds",{}).get("ArXiv",""))
+        if not arxiv_id:
+            id = paper.get("externalIds",{}).get("DOI","")
+            paper_url = f"https://dl.acm.org/doi/pdf/{id}"
+        else:
+            id = arxiv_id
+            paper_url = f"https://arxiv.org/pdf/{arxiv_id}.pdf"
+
+        pdf_response = requests.get(paper_url)
+
+        if pdf_response.status_code != 200:
+            return jsonify({"error": "Failed to download PDF"}), 400
+
+        document = ({
+                "title": paper_title,
+                "arxiv_id": id,
+                "pdf_binary": bson.Binary(pdf_response.content)
+        })
+
+        papers_collection.insert_one(document)
+
+        users_collection.update_one(
+            {"email":user_email},
+            {"$addToSet": {"papers": {"name": paper_title, "arxiv_id": id}}}
+        )
+
+
+        # paper_doc = papers_collection.find_one({"title": paper_title})
+
+        # pdf_bytes = paper_doc["pdf_binary"]
+
+        # pdf_stream = io.BytesIO(pdf_bytes)
+
+        # return send_file(pdf_stream, mimetype='application/pdf')
+
+        return jsonify({"results": {"title":paper_title}}), 200
+    
+    except requests.exceptions.RequestException as e:
+
+        return jsonify({"error": str(e)}), 500
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
