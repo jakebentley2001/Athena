@@ -152,7 +152,11 @@ def save_papers(user_email):
             "pdf_binary": bson.Binary(response.content)
         }
         
-        result = papers_collection.insert_one(document)
+        if papers_collection.find_one({"title": title}):
+            result = None 
+        else:
+            result = papers_collection.insert_one(document)
+
         print(result)
         users_collection.update_one(
             {"email":user_email},
@@ -269,7 +273,11 @@ def find_paper(user_email):
                 "pdf_binary": pdf_binary
         })
 
-        result = papers_collection.insert_one(document)
+        if papers_collection.find_one({"title": paper_title}):
+            result = None 
+        else:
+            result = papers_collection.insert_one(document)
+
         print(result)
         users_collection.update_one(
             {"email":user_email},
