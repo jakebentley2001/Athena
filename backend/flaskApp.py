@@ -327,7 +327,9 @@ def save_note():
     
     # Append the note and highlights to the in-memory list
     notes_and_highlights_questions.append(data)
-    openai_response = generate_response(data['note'], chunks, chunk_embeddings, color = 'red')
+
+    query =  "This was the LLMs response: " + data['highlights'] + ", This is the Question: " + data['note']
+    openai_response = generate_response(query, chunks, chunk_embeddings, color = 'red')
     return jsonify({'message': 'Note saved successfully', 'data': openai_response}), 200
 
 

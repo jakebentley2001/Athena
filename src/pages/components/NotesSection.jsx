@@ -67,7 +67,7 @@ const NotesSection = ({ notes, handleNoteChange, handleAddNote, setNotes, active
                                         const question = questionInput.value;
                                         if (question) {
                                             try {
-                                                const questionObject = { note: question , highlights: 'Hello'};
+                                                const questionObject = { note: question , highlights: note.text};
                                                 console.log(questionObject);
                                                 const response = await axios.post('http://127.0.0.1:5000/question', questionObject );
                                                 const backendResponse = response.data.data;

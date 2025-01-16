@@ -454,7 +454,345 @@
 // export default LearningPage;
 
 
-import React, { useState } from "react";
+
+
+
+
+
+
+
+
+// import React, { useState } from "react";
+// import { useNavigate } from 'react-router-dom';
+
+// function LearningPage() {
+//   const [topic, setTopic] = useState("");
+//   const [papers, setPapers] = useState({});
+//   const [errorMsg, setErrorMsg] = useState("");
+//   const [addedPapers, setAddedPapers] = useState([]);
+
+//   const userEmail = localStorage.getItem("userEmail");
+//   const navigate = useNavigate();
+
+//   // Desired category order
+//   const categoriesOrder = [
+//     "Foundational and Overview Works",
+//     "Core Techniques or Key Methods",
+//     "Important Subtopics / Subfields",
+//     "Advanced Topics and Ongoing Research",
+//   ];
+
+//   const handlePaperClick = (paperTitle) => {
+//     navigate(`/papers/${paperTitle}`);
+//   };
+
+//   const handleFetchPapers = () => {
+//     fetch("http://localhost:5000/api/papers/learning", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ topic }),
+//     })
+//       .then((res) => {
+//         if (!res.ok) {
+//           return res.json().then((data) => {
+//             throw new Error(data.error || "Unknown error");
+//           });
+//         }
+//         return res.json();
+//       })
+//       .then((data) => {
+//         setPapers(data);
+//         setErrorMsg("");
+//       })
+//       .catch((err) => {
+//         setPapers({});
+//         setErrorMsg(err.message);
+//       });
+//   };
+
+//   const handleButtonClick = async (paperTitle) => {
+//     try {
+//       const response = await fetch(
+//         `http://localhost:5000/api/papers/find_paper/${userEmail}`,
+//         {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//           body: JSON.stringify({ title: paperTitle }),
+//         }
+//       );
+
+//       if (!response.ok) {
+//         throw new Error("Failed to send paper title to the backend");
+//       }
+
+//       setAddedPapers((prev) => [...prev, paperTitle]);
+//       const data = await response.json();
+//       console.log("Backend response", data);
+//     } catch (error) {
+//       console.error("error", error);
+//       alert("Error sending paper");
+//     }
+//   };
+
+//   const handleHomeClick = () => {
+//     navigate("/home");
+//   };
+
+//   return (
+//     <div style={styles.pageContainer}>
+//       {/* Top Navigation Bar */}
+//       <header style={styles.headerBar}>
+//         <h1 style={styles.headerTitle}>Learning</h1>
+//         <button style={styles.homeButton} onClick={handleHomeClick}>
+//           Home
+//         </button>
+//       </header>
+
+//       <h2 style={styles.mainHeading}>Fetch Papers by Topic</h2>
+
+//       {/* Input + Get Papers */}
+//       <div style={styles.searchContainer}>
+//         <input
+//           type="text"
+//           placeholder="Enter a topic..."
+//           value={topic}
+//           onChange={(e) => setTopic(e.target.value)}
+//           style={styles.searchInput}
+//         />
+//         <button onClick={handleFetchPapers} style={styles.fetchButton}>
+//           Get Papers
+//         </button>
+//       </div>
+
+//       {/* Error message */}
+//       {errorMsg && <p style={styles.errorMessage}>{errorMsg}</p>}
+
+//       {/* Topic Heading */}
+//       <div style={styles.topicWrapper}>
+//         <h3 style={styles.topicHeading}>Papers for topic: {topic}</h3>
+
+//         {/* Categories Container (centered) */}
+//         <div style={styles.categoriesContainer}>
+//           {categoriesOrder.map((category) => {
+//             if (!papers[category]) {
+//               return null;
+//             }
+//             const paperList = papers[category].papers || [];
+
+//             return (
+//               <div key={category} style={styles.categorySection}>
+//                 <h4 style={styles.categoryTitle}>{category}</h4>
+
+//                 {/* Paper Cards */}
+//                 <div style={styles.paperCardsContainer}>
+//                   {paperList.map((paper, index) => {
+//                     const isAdded = addedPapers.includes(paper.title);
+//                     return (
+//                       <div key={index} style={styles.paperCard}>
+//                         <button
+//                           onClickCapture={() => {
+//                             if (isAdded) {
+//                               handlePaperClick(paper.title);
+//                             }
+//                           }}
+//                           style={{
+//                             ...styles.titleButton,
+//                             backgroundColor: isAdded
+//                               ? "#2196F3" // Blue if added
+//                               : "#FFFFFF", // White if not added
+//                             color: isAdded ? "#FFFFFF" : "#000000",
+//                           }}
+//                         >
+//                           {paper.title}
+//                         </button>
+
+//                         {/* "Add" button if not already added */}
+//                         {!isAdded && (
+//                           <button
+//                             onClick={() => handleButtonClick(paper.title)}
+//                             style={styles.addButton}
+//                             title="Add this paper"
+//                           >
+//                             Add
+//                           </button>
+//                         )}
+
+//                         {/* Bullet Points */}
+//                         {paper.bullet_points && paper.bullet_points.length > 0 && (
+//                           <ul style={styles.bulletList}>
+//                             {paper.bullet_points.map((point, bulletIndex) => (
+//                               <li key={bulletIndex} style={styles.bulletItem}>
+//                                 {point}
+//                               </li>
+//                             ))}
+//                           </ul>
+//                         )}
+//                       </div>
+//                     );
+//                   })}
+//                 </div>
+//               </div>
+//             );
+//           })}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default LearningPage;
+
+// const styles = {
+//   pageContainer: {
+//     minHeight: "100vh",
+//     margin: 0,
+//     padding: 0,
+//     backgroundColor: "#1E1E1E", // Dark background
+//     color: "#FFFFFF",
+//     fontFamily: "'Open Sans', sans-serif",
+//   },
+//   headerBar: {
+//     display: "flex",
+//     alignItems: "center",
+//     justifyContent: "space-between",
+//     backgroundColor: "rgba(255, 255, 255, 0.1)",
+//     backdropFilter: "blur(8px)",
+//     padding: "15px 20px",
+//     boxShadow: "0 0 20px rgba(0, 0, 0, 0.8)",
+//   },
+//   headerTitle: {
+//     margin: 0,
+//     fontSize: "1.5rem",
+//     color: "#fff",
+//   },
+//   homeButton: {
+//     backgroundColor: "#444",
+//     color: "#fff",
+//     border: "none",
+//     borderRadius: "5px",
+//     padding: "10px 16px",
+//     cursor: "pointer",
+//     fontWeight: "bold",
+//     transition: "opacity 0.2s",
+//   },
+//   mainHeading: {
+//     marginBottom: "20px",
+//     color: "#BBDEFB",
+//     textAlign: "center",
+//     marginTop: "20px",
+//   },
+//   searchContainer: {
+//     marginBottom: "20px",
+//     textAlign: "center",
+//   },
+//   searchInput: {
+//     marginRight: "10px",
+//     padding: "8px",
+//     borderRadius: "4px",
+//     border: "1px solid #444",
+//     backgroundColor: "#2A2A2A",
+//     color: "#FFFFFF",
+//   },
+//   fetchButton: {
+//     padding: "8px 20px",
+//     border: "none",
+//     borderRadius: "4px",
+//     backgroundColor: "#2196F3",
+//     color: "#FFF",
+//     cursor: "pointer",
+//     fontWeight: "bold",
+//   },
+//   errorMessage: {
+//     color: "#FF4E42",
+//     textAlign: "center",
+//   },
+//   topicWrapper: {
+//     marginTop: "20px",
+//     textAlign: "center",
+//     paddingBottom: "40px",
+//   },
+//   topicHeading: {
+//     color: "#BBDEFB",
+//     marginBottom: "20px",
+//   },
+//   categoriesContainer: {
+//     display: "flex",
+//     flexDirection: "column",
+//     alignItems: "center",
+//   },
+//   categorySection: {
+//     width: "80%",
+//     maxWidth: "1000px",
+//     margin: "30px 0",
+//     backgroundColor: "#2A2A2A",
+//     borderRadius: "8px",
+//     padding: "15px",
+//   },
+//   categoryTitle: {
+//     marginBottom: "10px",
+//     color: "#90CAF9",
+//     textAlign: "center",
+//   },
+//   paperCardsContainer: {
+//     display: "flex",
+//     flexWrap: "wrap",
+//     gap: "20px",
+//     justifyContent: "center",
+//     marginTop: "10px",
+//   },
+//   paperCard: {
+//     flex: "0 0 250px", // ~250px wide card
+//     display: "flex",
+//     flexDirection: "column",
+//     alignItems: "center",
+//     gap: "10px",
+//     padding: "10px",
+//     border: "1px solid #3A3A3A",
+//     borderRadius: "6px",
+//     backgroundColor: "#1F1F1F",
+//   },
+//   titleButton: {
+//     width: "100%",
+//     height: "50px", // Fixed height
+//     border: "none",
+//     borderRadius: "3px",
+//     cursor: "pointer",
+//     fontWeight: "bold",
+//     fontFamily: "'Open Sans', sans-serif",
+//     textAlign: "center",
+//     overflow: "hidden",
+//     whiteSpace: "nowrap",
+//     textOverflow: "ellipsis", // Truncates if text is too long
+//     transition: "background-color 0.3s ease",
+//   },
+//   addButton: {
+//     backgroundColor: "transparent",
+//     color: "#2196F3",
+//     border: "none",
+//     fontSize: "0.9rem",
+//     cursor: "pointer",
+//     fontWeight: "bold",
+//   },
+//   bulletList: {
+//     margin: 0,
+//     paddingLeft: "20px",
+//     listStyleType: "disc",
+//     textAlign: "left",
+//     width: "100%",
+//   },
+//   bulletItem: {
+//     marginBottom: "6px",
+//     lineHeight: "1.4",
+//   },
+// };
+
+
+
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 
 function LearningPage() {
@@ -462,6 +800,15 @@ function LearningPage() {
   const [papers, setPapers] = useState({});
   const [errorMsg, setErrorMsg] = useState("");
   const [addedPapers, setAddedPapers] = useState([]);
+
+  // Loading-related states
+  const [isLoading, setIsLoading] = useState(false);
+  const loadingMessages = [
+    "Working on your learning journey",
+    "Gathering Resources",
+    "Become an expert in everything",
+  ];
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
 
   const userEmail = localStorage.getItem("userEmail");
   const navigate = useNavigate();
@@ -474,11 +821,29 @@ function LearningPage() {
     "Advanced Topics and Ongoing Research",
   ];
 
+  // Cycle through loading messages every 4 seconds
+  useEffect(() => {
+    let interval;
+    if (isLoading) {
+      interval = setInterval(() => {
+        setLoadingMessageIndex((prevIndex) => (prevIndex + 1) % loadingMessages.length);
+      }, 4000);
+    } else {
+      setLoadingMessageIndex(0);
+    }
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isLoading, loadingMessages]);
+
   const handlePaperClick = (paperTitle) => {
     navigate(`/papers/${paperTitle}`);
   };
 
   const handleFetchPapers = () => {
+    // Turn loading on
+    setIsLoading(true);
+
     fetch("http://localhost:5000/api/papers/learning", {
       method: "POST",
       headers: {
@@ -497,10 +862,14 @@ function LearningPage() {
       .then((data) => {
         setPapers(data);
         setErrorMsg("");
+        // Turn loading off on success
+        setIsLoading(false);
       })
       .catch((err) => {
         setPapers({});
         setErrorMsg(err.message);
+        // Turn loading off on error
+        setIsLoading(false);
       });
   };
 
@@ -563,81 +932,98 @@ function LearningPage() {
       {/* Error message */}
       {errorMsg && <p style={styles.errorMessage}>{errorMsg}</p>}
 
-      {/* Topic Heading */}
-      <div style={styles.topicWrapper}>
-        <h3 style={styles.topicHeading}>Papers for topic: {topic}</h3>
-
-        {/* Categories Container (centered) */}
-        <div style={styles.categoriesContainer}>
-          {categoriesOrder.map((category) => {
-            if (!papers[category]) {
-              return null;
-            }
-            const paperList = papers[category].papers || [];
-
-            return (
-              <div key={category} style={styles.categorySection}>
-                <h4 style={styles.categoryTitle}>{category}</h4>
-
-                {/* Paper Cards */}
-                <div style={styles.paperCardsContainer}>
-                  {paperList.map((paper, index) => {
-                    const isAdded = addedPapers.includes(paper.title);
-                    return (
-                      <div key={index} style={styles.paperCard}>
-                        <button
-                          onClickCapture={() => {
-                            if (isAdded) {
-                              handlePaperClick(paper.title);
-                            }
-                          }}
-                          style={{
-                            ...styles.titleButton,
-                            backgroundColor: isAdded
-                              ? "#2196F3" // Blue if added
-                              : "#FFFFFF", // White if not added
-                            color: isAdded ? "#FFFFFF" : "#000000",
-                          }}
-                        >
-                          {paper.title}
-                        </button>
-
-                        {/* "Add" button if not already added */}
-                        {!isAdded && (
-                          <button
-                            onClick={() => handleButtonClick(paper.title)}
-                            style={styles.addButton}
-                            title="Add this paper"
-                          >
-                            Add
-                          </button>
-                        )}
-
-                        {/* Bullet Points */}
-                        {paper.bullet_points && paper.bullet_points.length > 0 && (
-                          <ul style={styles.bulletList}>
-                            {paper.bullet_points.map((point, bulletIndex) => (
-                              <li key={bulletIndex} style={styles.bulletItem}>
-                                {point}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
+      {/* Loading Indicator */}
+      {isLoading && (
+        <div style={styles.loadingContainer}>
+          {/* Spinner */}
+          <div style={styles.spinner} />
+          {/* Cycling text */}
+          <p style={styles.loadingText}>
+            {loadingMessages[loadingMessageIndex]}
+          </p>
         </div>
-      </div>
+      )}
+
+      {/* Topic and Papers (only show if NOT loading) */}
+      {!isLoading && (
+        <div style={styles.topicWrapper}>
+          <h3 style={styles.topicHeading}>Papers for topic: {topic}</h3>
+
+          {/* Categories Container (centered) */}
+          <div style={styles.categoriesContainer}>
+            {categoriesOrder.map((category) => {
+              if (!papers[category]) return null;
+
+              const paperList = papers[category].papers || [];
+
+              return (
+                <div key={category} style={styles.categorySection}>
+                  <h4 style={styles.categoryTitle}>{category}</h4>
+
+                  {/* Paper Cards */}
+                  <div style={styles.paperCardsContainer}>
+                    {paperList.map((paper, index) => {
+                      const isAdded = addedPapers.includes(paper.title);
+                      return (
+                        <div key={index} style={styles.paperCard}>
+                          <button
+                            onClickCapture={() => {
+                              if (isAdded) {
+                                handlePaperClick(paper.title);
+                              }
+                            }}
+                            style={{
+                              ...styles.titleButton,
+                              backgroundColor: isAdded
+                                ? "#2196F3" // Blue if added
+                                : "#FFFFFF", // White if not added
+                              color: isAdded ? "#FFFFFF" : "#000000",
+                            }}
+                          >
+                            {paper.title}
+                          </button>
+
+                          {/* "Add" button if not already added */}
+                          {!isAdded && (
+                            <button
+                              onClick={() => handleButtonClick(paper.title)}
+                              style={styles.addButton}
+                              title="Add this paper"
+                            >
+                              Add
+                            </button>
+                          )}
+
+                          {/* Bullet Points */}
+                          {paper.bullet_points &&
+                            paper.bullet_points.length > 0 && (
+                              <ul style={styles.bulletList}>
+                                {paper.bullet_points.map(
+                                  (point, bulletIndex) => (
+                                    <li key={bulletIndex} style={styles.bulletItem}>
+                                      {point}
+                                    </li>
+                                  )
+                                )}
+                              </ul>
+                            )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 export default LearningPage;
 
+// Styling
 const styles = {
   pageContainer: {
     minHeight: "100vh",
@@ -701,6 +1087,25 @@ const styles = {
   errorMessage: {
     color: "#FF4E42",
     textAlign: "center",
+  },
+  // Loading Styles
+  loadingContainer: {
+    textAlign: "center",
+    margin: "20px 0",
+  },
+  spinner: {
+    display: "inline-block",
+    width: "50px",
+    height: "50px",
+    border: "4px solid #ffffff",
+    borderBottomColor: "transparent",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite", // keyframes reference
+  },
+  loadingText: {
+    marginTop: "10px",
+    fontSize: "1rem",
+    color: "#BBDEFB",
   },
   topicWrapper: {
     marginTop: "20px",
@@ -779,5 +1184,20 @@ const styles = {
   bulletItem: {
     marginBottom: "6px",
     lineHeight: "1.4",
+  },
+
+  /* 
+   * Keyframes for spinner rotation 
+   * Note: Inline styles don't directly support "@keyframes".
+   *       To make this work seamlessly, place this in your CSS file 
+   *       or within a global <style> block.
+   */
+  "@keyframes spin": {
+    "0%": {
+      transform: "rotate(0deg)"
+    },
+    "100%": {
+      transform: "rotate(360deg)"
+    },
   },
 };
