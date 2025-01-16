@@ -76,49 +76,55 @@ const PaperDetails = () => {
 
 return (
     <div className="flex flex-col h-screen w-full m-0 p-0 bg-gray-900 text-white">
-        {/* top bar */}
-        <div className="p-2 bg-gray-900 border-b border-gray-700 flex items-center gap-4 sticky top-0 z-50">
-            <div className="flex items-center gap-2">
-                <img
-                    src="/highlighter.png"
-                    alt="Highlighter"
-                    className={`w-8 h-8 cursor-pointer ${
-                        highlightEnabled && currentColor === 'yellow' ? 'drop-shadow-[0_0_4px_white]' : ''
-                    }`}
-                    onClick={() => {
-                        setHighlightEnabled(true);
-                        setCurrentColor('yellow');
-                    }}
-                />
-                <img
-                    src="/question.png"
-                    alt="Question"
-                    className={`w-8 h-8 cursor-pointer ${
-                        highlightEnabled && currentColor === 'blue' ? 'drop-shadow-[0_0_4px_white]' : ''
-                    }`}
-                    onClick={() => {
-                        setHighlightEnabled(true);
-                        setCurrentColor('blue');
-                    }}
-                />
-                <img
-                    src="/brain.png"
-                    alt="Brain"
-                    className={`w-8 h-8 cursor-pointer ${
-                        highlightEnabled && currentColor === 'green' ? 'drop-shadow-[0_0_4px_white]' : ''
-                    }`}
-                    onClick={() => {
-                        setHighlightEnabled(true);
-                        setCurrentColor('green');
-                    }}
-                />
-                <button 
-                    onClick = { handleHomeButton } style = {{width: "50px", height: "30px"}}
-                >
-                    Home
-                </button>
-            </div>
+        {/* Top bar */}
+        <div className="p-2 bg-gray-900 border-b border-gray-700 flex items-center justify-between sticky top-0 z-50">
+        {/* Left Section: Icons */}
+        <div className="flex items-center gap-2">
+            <img
+            src="/highlighter.png"
+            alt="Highlighter"
+            className={`w-8 h-8 cursor-pointer ${
+                highlightEnabled && currentColor === 'yellow' ? 'drop-shadow-[0_0_4px_white]' : ''
+            }`}
+            onClick={() => {
+                setHighlightEnabled(true);
+                setCurrentColor('yellow');
+            }}
+            />
+            <img
+            src="/question.png"
+            alt="Question"
+            className={`w-8 h-8 cursor-pointer ${
+                highlightEnabled && currentColor === 'blue' ? 'drop-shadow-[0_0_4px_white]' : ''
+            }`}
+            onClick={() => {
+                setHighlightEnabled(true);
+                setCurrentColor('blue');
+            }}
+            />
+            <img
+            src="/brain.png"
+            alt="Brain"
+            className={`w-8 h-8 cursor-pointer ${
+                highlightEnabled && currentColor === 'green' ? 'drop-shadow-[0_0_4px_white]' : ''
+            }`}
+            onClick={() => {
+                setHighlightEnabled(true);
+                setCurrentColor('green');
+            }}
+            />
         </div>
+
+        {/* Right Section: Home Button */}
+        <button
+            onClick={handleHomeButton}
+            className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-2 rounded"
+        >
+            Home
+        </button>
+        </div>
+
+
 
         {/* Main content */}
         <div className="flex grow">
