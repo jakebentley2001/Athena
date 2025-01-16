@@ -10,6 +10,7 @@ import requests
 import bson
 import base64, io
 from sift import get_papers_from_topic
+from trial import get_papers_from_topic_2
 import asyncio
 
 # Load environment variables from .env file
@@ -219,7 +220,7 @@ def get_papers_from_llm():
         return jsonify({"error":"No topic provided"}), 400
 
     global papers_list_topic
-    papers_list_topic = get_papers_from_topic(topic)
+    papers_list_topic = get_papers_from_topic_2(topic)
 
     return jsonify(papers_list_topic), 200
 

@@ -32,7 +32,6 @@ def extract_text_from_pdf(pdf):
 
    
 
-
 def split_text_into_chunks(text, max_tokens=1000):
     """
     Splits text into chunks of maximum token size.
@@ -55,6 +54,7 @@ def split_text_into_chunks(text, max_tokens=1000):
         chunks.append(' '.join(current_chunk))
 
     return chunks
+
 
 def generate_chunks(pdf):
 
