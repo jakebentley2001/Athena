@@ -30,16 +30,17 @@ Project Athena is a web-based learning platform designed to help users efficient
 
 ## How It Works
 1. **Enter a research topic** – Users input a keyword or topic of interest.
-2. **Fetch research papers** – The platform retrieves relevant academic papers.
-3. **Explore papers** – Users can read the full paper, get AI-generated explanations, and ask questions.
-4. **Follow structured learning paths** – The AI organizes papers into different categories for a smooth learning experience.
+2. **Follow structured learning paths** – The AI organizes papers into different categories for a smooth learning experience.
+3. **Fetch research papers** – The platform retrieves relevant academic papers.
+4. **Explore papers** – Users can read the full paper, get AI-generated explanations, and ask questions.
 5. **Refine knowledge** – Users can dive deeper into selected papers based on recommendations and insights.
 
 ## Technologies Used
 - **Frontend:** React.js for a dynamic and interactive UI
-- **Backend:** FastAPI for handling API requests and AI-driven responses
-- **Machine Learning:** NLP models to summarize content and provide intelligent responses
-- **Database:** MongoDB to store user preferences and search history
+- **Backend:** FlaskAPI for handling API requests and AI-driven responses
+- **RAG System:** Text-embedding-ada-002 for embedding chunks of the paper into a latent space
+- **Natural Language Question Answering** GPT-4o for answering user queries with the provided context from RAG system
+- **Database:** MongoDB to store user papers, interactive history, and paper embeddings
 
 ## Installation & Setup
 1. Clone the repository:
@@ -63,9 +64,5 @@ Project Athena is a web-based learning platform designed to help users efficient
    ```
 5. Open the web app in your browser at `http://localhost:3000`
 
-## Contributing
-Contributions are welcome! Please submit a pull request or open an issue to discuss any changes.
 
-## License
-This project is licensed under the MIT License.
 
