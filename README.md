@@ -17,7 +17,7 @@ Project Athena is a web-based learning platform designed to help users efficient
 *Users can view research papers with an interactive AI-powered assistant providing explanations and answering queries.*
 
 ### Query-based Learning
-![Query-based Learning](images/Screenshot%2025-02-05%at%10.45.28%AM.png)
+![Query-based Learning](images/Screenshot 2025-02-05 at 10.45.28 AM.png)
 *Users can type questions related to the research paper, and the AI provides responses based on the content.*
 
 ### Paper Summarization & Learning Paths
