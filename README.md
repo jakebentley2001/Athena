@@ -12,21 +12,22 @@ Project Athena is a web-based learning platform designed to help users efficient
 
 ## Screenshots
 
-### Query-based Learning
-![Query-based Learning](images/Screenshot%202025-02-05%20at%2010.45.28%E2%80%AFAM.png)
-*Users can type questions related to the research paper, and the AI provides responses based on the content.*
-
-### Interactive Paper Viewer
-![Interactive Paper Viewer](images/Screenshot%202025-02-05%20at%2010.55.41%E2%80%AFAM.png)
-*Users can view research papers with an interactive AI-powered assistant providing explanations and answering queries.*
+### Paper Recommendation Engine
+![Paper Recommendation Engine](images/Screenshot%202025-02-05%20at%2010.45.28%E2%80%AFAM.png)
+*Users can search for papers on a given topic and get recommendations grouped into different learning categories.*
 
 ### Paper Summarization & Learning Paths
-![Paper Summarization & Learning Paths](images/Screenshot%202025-02-05%20at%2010.55.56%E2%80%AFAM.png)
+![Paper Summarization & Learning Paths](images/Screenshot%202025-02-05%20at%2010.55.41%E2%80%AFAM.png)
 *Papers are categorized into foundational knowledge, core techniques, and advanced research topics to facilitate structured learning.*
 
-### Paper Recommendation Engine
-![Paper Recommendation Engine](images/Screenshot%202025-02-05%20at%2010.57.40%E2%80%AFAM.png)
-*Users can search for papers on a given topic and get recommendations grouped into different learning categories.*
+### Interactive Paper Viewer
+![Interactive Paper Viewer](images/Screenshot%202025-02-05%20at%2010.55.56%E2%80%AFAM.png)
+*Users can view research papers with an interactive AI-powered assistant providing explanations and answering queries.*
+
+### Query-based Learning
+![Query-based Learning](images/Screenshot%202025-02-05%20at%2010.57.40%E2%80%AFAM.png)
+*Users can type questions related to the research paper, and the AI provides responses based on the content.*
+
 
 ## How It Works
 1. **Enter a research topic** – Users input a keyword or topic of interest.
