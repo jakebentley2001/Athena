@@ -46,21 +46,21 @@ Project Athena is a web-based learning platform designed to help users efficient
 1. Clone the repository:
    ```sh
    git clone https://github.com/jakebentley2001/project-athena.git
-   cd project-athena
+   cd my-app
    ```
 2. Install dependencies:
    ```sh
    pip install -r requirements.txt  # Backend dependencies
-   cd frontend && npm install  # Frontend dependencies
+   npm install  # Frontend dependencies
    ```
 3. Start the backend server:
    ```sh
-   python backend/flaskApp.py
+   cd backend
+   python flaskApp.py
    ```
 4. Start the frontend:
    ```sh
-   cd frontend
-   npm start
+   npm run dev
    ```
 5. Open the web app in your browser at `http://localhost:3000`
 
