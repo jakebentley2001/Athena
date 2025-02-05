@@ -67,5 +67,4 @@ def generate_chunks(pdf):
         for chunk in paper_chunks
     ]
 
-    
     return paper_chunks, chunk_embeddings
