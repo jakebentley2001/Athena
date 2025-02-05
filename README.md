@@ -44,7 +44,7 @@ Project Athena is a web-based learning platform designed to help users efficient
 ## Installation & Setup
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/project-athena.git
+   git clone https://github.com/jakebentley2001/project-athena.git
    cd project-athena
    ```
 2. Install dependencies:
@@ -54,7 +54,7 @@ Project Athena is a web-based learning platform designed to help users efficient
    ```
 3. Start the backend server:
    ```sh
-   uvicorn app.main:app --reload
+   python backend/flaskApp.py
    ```
 4. Start the frontend:
    ```sh
